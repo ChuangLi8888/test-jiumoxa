@@ -1,25 +1,540 @@
 <!DOCTYPE html>
-<html lang="zh"><head>
+<html lang="zh">
+<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<meta http-equiv="refresh" content="60">
-<title>爆款雷达 · 还在加载</title>
+<title>Traditional Chinese Medicine (TCM) Wellness Center</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-  body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
-       background:#0a0d13;color:#e8e8ea;text-align:center;padding:24px;
-       font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif}
-  .spin{width:34px;height:34px;margin:0 auto 26px;border:3px solid #2a2f3a;
-        border-top-color:#ff785a;border-radius:50%;animation:s 1s linear infinite}
-  @keyframes s{to{transform:rotate(360deg)}}
-  h1{font-size:23px;margin:0 0 14px;font-weight:600}
-  p{margin:8px 0;color:#9a9aa2;font-size:15px;line-height:1.75}
-  .hint{margin-top:30px;font-size:13.5px;color:#6e6e78}
-  @media(prefers-reduced-motion:reduce){.spin{animation:none}}
-</style></head><body><div>
-  <div class="spin"></div>
-  <h1>你的页面还在加载中,请稍等</h1>
-  <p>第一次大约需要 20-60 分钟。</p>
-  <p>这一页会自己刷新,你可以先去忙别的。</p>
-  <p class="hint">等很久都没变?回到安装 SOP 第 7 步,<br>到仓库的 Actions 看 Sync Content 有没有跑完。</p>
-</div></body></html>
+  :root {
+    --bg: #0a0d13;
+    --card: #11151d;
+    --card-hi: #151a24;
+    --border: #1d2430;
+    --border-hi: #2c3546;
+    --text: #e8ecf3;
+    --muted: #8a94a6;
+    --faint: #5b6577;
+    --accent: #5ea1ff;
+    --green: #3fd68f;
+    --orange: #f0a33f;
+    --pink: #ff6b9d;
+    --red: #ff5c5c;
+    --fire1: #ff8a3d;
+    --fire2: #ff4d6d;
+    --font: 'Inter', -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    --disp: 'Space Grotesk', 'Inter', -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scrollbar-color: #232c3b var(--bg); }
+  body { background: var(--bg); color: var(--text); font-family: var(--font);
+    -webkit-font-smoothing: antialiased; }
+  ::selection { background: rgba(94,161,255,.3); }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: #232c3b; border-radius: 8px; }
+  ::-webkit-scrollbar-thumb:hover { background: #2c3546; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+
+  .ic { width: 14px; height: 14px; stroke: currentColor; stroke-width: 2;
+    stroke-linecap: round; stroke-linejoin: round; fill: none; flex: none; }
+
+  header { position: sticky; top: 0; z-index: 50; background: rgba(10,13,19,.86);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border); padding: 13px 20px 12px; }
+  .hrow { display: flex; flex-wrap: wrap; gap: 9px; align-items: center; max-width: 1440px; margin: 0 auto; }
+  .brand { display: flex; align-items: center; gap: 10px; margin-right: auto; }
+  .mark { width: 31px; height: 31px; border-radius: 9px; display: grid; place-items: center;
+    background: linear-gradient(135deg, var(--fire1), var(--fire2));
+    box-shadow: 0 4px 16px rgba(255,92,80,.35); }
+  .mark .ic { width: 17px; height: 17px; color: #fff; }
+  h1 { font-family: var(--disp); font-size: 16.5px; font-weight: 700; letter-spacing: .2px; white-space: nowrap; line-height: 1.15; }
+  h1 small { display: block; color: var(--faint); font-family: var(--font); font-weight: 400;
+    font-size: 10.5px; letter-spacing: 0; }
+
+  .search { position: relative; }
+  .search > .ic { position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+    color: var(--faint); width: 13.5px; pointer-events: none; }
+  input#fSearch { background: var(--card); color: var(--text); border: 1px solid var(--border);
+    border-radius: 10px; padding: 8px 12px 8px 32px; font-size: 13px; font-family: var(--font);
+    width: 200px; transition: border-color .18s, background .18s; }
+  input#fSearch:hover { border-color: var(--border-hi); }
+  input#fSearch:focus { border-color: var(--accent); outline: none; }
+  input#fSearch::placeholder { color: var(--faint); }
+
+  select, .btn { background: var(--card); color: var(--text); border: 1px solid var(--border);
+    border-radius: 10px; padding: 8px 11px; font-size: 13px; font-family: var(--font);
+    cursor: pointer; transition: border-color .18s, background .18s, color .18s;
+    display: inline-flex; align-items: center; gap: 6px; }
+  select:hover, .btn:hover { border-color: var(--border-hi); background: var(--card-hi); }
+  .btn:active { transform: scale(.97); }
+  .btn.on { border-color: var(--accent); color: var(--accent); background: rgba(94,161,255,.08); }
+
+  .tabs { display: flex; gap: 7px; flex-wrap: wrap; max-width: 1440px; margin: 12px auto 0; }
+  .tab { display: inline-flex; align-items: center; gap: 7px; background: var(--card);
+    border: 1px solid var(--border); border-radius: 999px; padding: 6.5px 14px;
+    font-size: 13px; color: var(--muted); cursor: pointer; user-select: none;
+    transition: border-color .18s, background .18s, color .18s, transform .18s; }
+  .tab:hover { border-color: var(--border-hi); color: var(--text); }
+  .tab .cnt { font-family: var(--disp); font-weight: 600; font-size: 11px;
+    background: rgba(255,255,255,.06); padding: 1.5px 7.5px; border-radius: 99px;
+    font-variant-numeric: tabular-nums; }
+  .tab.on { color: var(--text);
+    background: linear-gradient(135deg, rgba(255,138,61,.15), rgba(255,77,109,.15));
+    border-color: rgba(255,120,90,.45); }
+  .tab.on .cnt { background: rgba(255,120,90,.25); }
+  body.dragging .tab.droppable { border-style: dashed; border-color: var(--accent); }
+  .tab.over { background: rgba(94,161,255,.22); color: var(--text); transform: scale(1.07); }
+
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; max-width: 1440px; margin: 9px auto 0; align-items: center; }
+  .chips .lbl { font-size: 12px; color: var(--faint); margin-right: 2px; }
+  .chip2 { display: inline-flex; align-items: center; gap: 5.5px; background: var(--card);
+    border: 1px solid var(--border); border-radius: 999px; padding: 4.5px 12px;
+    font-size: 12px; color: var(--muted); cursor: pointer; user-select: none;
+    transition: border-color .18s, color .18s, background .18s;
+    font-variant-numeric: tabular-nums; }
+  .chip2 .ic { width: 12.5px; height: 12.5px; }
+  .chip2:hover { border-color: var(--border-hi); color: var(--text); }
+  .chip2.on { border-color: rgba(240,163,63,.6); color: var(--orange); background: rgba(240,163,63,.08); }
+
+  main { max-width: 1440px; margin: 22px auto; padding: 0 20px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(305px, 1fr)); gap: 18px; }
+
+  .card { position: relative; background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; overflow: hidden; display: flex; flex-direction: column;
+    transition: transform .22s cubic-bezier(.2,.7,.3,1), border-color .22s, box-shadow .22s;
+    animation: fadeUp .45s cubic-bezier(.2,.7,.3,1) both; }
+  .card:hover { transform: translateY(-3px); border-color: var(--border-hi);
+    box-shadow: 0 12px 32px rgba(0,0,0,.45); }
+  .card.outlier::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--fire1), var(--fire2)); z-index: 2; }
+  .card[draggable] { cursor: grab; }
+  .card.lifting { opacity: .45; }
+  .card.saved { border-color: var(--green); }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+  .embed { position: relative; width: 100%; aspect-ratio: 4/5; background: #080b10; }
+  .embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .embed .ph { position: absolute; inset: 0; display: grid; place-items: center;
+    background: linear-gradient(110deg, #0b0e15 8%, #121826 18%, #0b0e15 33%);
+    background-size: 200% 100%; animation: shimmer 1.5s linear infinite; }
+  .embed .ph .ic { width: 30px; height: 30px; color: #2a3342; stroke-width: 1.6; }
+  @keyframes shimmer { to { background-position-x: -200%; } }
+
+  .meta { padding: 13px 15px 14px; display: flex; flex-direction: column; gap: 9px; }
+  .row1 { display: flex; align-items: center; gap: 7px; font-size: 13px; flex-wrap: wrap; }
+  .handle { color: #3a4456; cursor: grab; display: inline-flex; }
+  .handle .ic { width: 13px; height: 13px; }
+  .who { font-weight: 600; color: var(--accent); text-decoration: none; }
+  .who:hover { text-decoration: underline; }
+  .badge { display: inline-flex; align-items: center; gap: 4px; font-size: 10.5px; font-weight: 500;
+    padding: 2.5px 8px; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); }
+  .badge .ic { width: 10.5px; height: 10.5px; }
+  .badge.bnew { color: var(--pink); border-color: rgba(255,107,157,.45); background: rgba(255,107,157,.07); }
+  .badge.bhorse { color: var(--orange); border-color: rgba(240,163,63,.45); background: rgba(240,163,63,.07); }
+  .badge.bbait { color: var(--accent); border-color: rgba(94,161,255,.4); background: rgba(94,161,255,.07); }
+  .date { margin-left: auto; color: var(--faint); font-size: 11px; font-variant-numeric: tabular-nums; }
+
+  .nums { display: flex; gap: 6px; flex-wrap: wrap; }
+  .num { display: inline-flex; align-items: center; gap: 5px; background: #0c0f16;
+    border: 1px solid var(--border); border-radius: 9px; padding: 5px 9px;
+    font-size: 11px; color: var(--muted); }
+  .num .ic { width: 11.5px; height: 11.5px; }
+  .num b { font-family: var(--disp); color: var(--text); font-size: 12.5px; font-weight: 600;
+    font-variant-numeric: tabular-nums; }
+  .num.hot { border-color: rgba(255,122,77,.35); }
+  .num.hot .ic, .num.hot b { color: #ff7a4d; }
+  .num.x { border-color: rgba(240,163,63,.35); }
+  .num.x .ic, .num.x b { color: var(--orange); }
+  .num.er .ic, .num.er b { color: var(--green); }
+
+  .cap { color: var(--muted); font-size: 12.5px; line-height: 1.55; display: -webkit-box;
+    -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; cursor: pointer; }
+  .cap.open { -webkit-line-clamp: unset; }
+  .cap b { color: var(--text); font-weight: 600; }
+  .ai { border-left: 2px solid var(--orange); background: rgba(240,163,63,.06);
+    padding: 8px 11px; border-radius: 0 10px 10px 0; font-size: 12px; line-height: 1.65;
+    color: var(--muted); }
+  .ai b { color: var(--orange); font-weight: 600; }
+  .mine { border-left: 2px solid var(--green); background: rgba(63,214,143,.06);
+    padding: 8px 11px; border-radius: 0 10px 10px 0; font-size: 12px; line-height: 1.65;
+    color: var(--muted); cursor: pointer; display: -webkit-box; -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical; overflow: hidden; white-space: pre-wrap; }
+  .mine.open { -webkit-line-clamp: unset; }
+  .mine b { color: var(--green); font-weight: 600; }
+
+  .srow { display: flex; align-items: center; gap: 7px; }
+  .srow label { font-size: 12px; color: var(--faint); }
+  .status { flex: 1; padding: 6px 9px; font-size: 12.5px; }
+  .status.s未处理 { color: var(--muted); }
+  .status.s拍摄中 { color: var(--orange); border-color: rgba(240,163,63,.5); }
+  .status.s已处理 { color: var(--green); border-color: rgba(63,214,143,.5); }
+  .status.s跳过 { color: var(--red); border-color: rgba(255,92,92,.5); }
+  .abtn { display: inline-flex; align-items: center; gap: 5px; background: #0c0f16;
+    color: var(--muted); border: 1px solid var(--border); border-radius: 9px;
+    padding: 6px 10px; font-size: 11.5px; font-family: var(--font); cursor: pointer;
+    text-decoration: none; transition: color .18s, border-color .18s, transform .1s; }
+  .abtn .ic { width: 12px; height: 12px; }
+  .abtn:hover { color: var(--accent); border-color: rgba(94,161,255,.5); }
+  .abtn:active { transform: scale(.95); }
+
+  .more { text-align: center; margin: 28px 0 44px; }
+  .more button { background: var(--card); color: var(--accent); border: 1px solid var(--border);
+    border-radius: 12px; padding: 11px 30px; font-size: 14px; font-family: var(--font);
+    cursor: pointer; transition: border-color .18s, background .18s; }
+  .more button:hover { border-color: var(--border-hi); background: var(--card-hi); }
+
+  .empty { color: var(--faint); text-align: center; padding: 70px 0; display: flex;
+    flex-direction: column; align-items: center; gap: 12px; font-size: 14px; }
+  .empty .ic { width: 34px; height: 34px; stroke-width: 1.5; color: #2c3546; }
+
+  footer { color: var(--faint); font-size: 11px; text-align: center; padding: 22px; }
+
+  #toast { position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%) translateY(8px);
+    background: var(--card-hi); border: 1px solid var(--border-hi); border-radius: 11px;
+    padding: 11px 20px; font-size: 13px; display: none; z-index: 99; opacity: 0;
+    box-shadow: 0 12px 32px rgba(0,0,0,.5); transition: opacity .2s, transform .2s; }
+  #toast.show { display: block; opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-flame" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/></symbol>
+  <symbol id="i-msg" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="i-trend" viewBox="0 0 24 24"><path d="M22 7l-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/></symbol>
+  <symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2l2.9 6.9 7.1.6-5.4 4.7 1.6 7-6.2-3.7-6.2 3.7 1.6-7L2 9.5l7.1-.6z"/></symbol>
+  <symbol id="i-magnet" viewBox="0 0 24 24"><path d="m6 15-4-4 6.75-6.77a7.79 7.79 0 0 1 11 11L13 22l-4-4 6.39-6.36a2.14 2.14 0 0 0-3-3L6 15"/><path d="m5 8 4 4"/><path d="m12 15 4 4"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+  <symbol id="i-clip" viewBox="0 0 24 24"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 12h6"/><path d="M9 16h6"/></symbol>
+  <symbol id="i-ext" viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol>
+  <symbol id="i-key" viewBox="0 0 24 24"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></symbol>
+  <symbol id="i-video" viewBox="0 0 24 24"><path d="m10 8 6 4-6 4Z"/><rect x="2" y="4" width="20" height="16" rx="3"/></symbol>
+  <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></symbol>
+  <symbol id="i-grip" viewBox="0 0 24 24"><circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/></symbol>
+  <symbol id="i-pct" viewBox="0 0 24 24"><path d="M19 5 5 19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/></symbol>
+</svg>
+<header>
+  <div class="hrow">
+    <div class="brand">
+      <div class="mark"><svg class="ic"><use href="#i-flame"/></svg></div>
+      <h1>Traditional Chinese Medicine (TCM) Wellness Center<small id="updated"></small></h1>
+    </div>
+    <div class="search"><svg class="ic"><use href="#i-search"/></svg>
+      <input id="fSearch" placeholder="搜文案 / hashtag / 账号"></div>
+    <select id="fTracker"><option value="">全部 Tracker</option></select>
+    <select id="fComp"><option value="">全部 Competitor</option></select>
+    <select id="fSort">
+      <option value="x">按 爆款倍数 (vs 自家平均)</option>
+      <option value="score">按 Viral Score</option>
+      <option value="er">按 Engagement Rate</option>
+      <option value="comments">按 Comments</option>
+      <option value="likes">按 Likes</option>
+      <option value="date">按 最新日期</option>
+    </select>
+    <button class="btn" id="fVideo"><svg class="ic"><use href="#i-video"/></svg>只看视频</button>
+
+    <a class="btn" href="team.html" target="_top" title="工作台"><svg class="ic"><use href="#i-users"/></svg>工作台</a>
+  </div>
+  <div class="tabs" id="tabs"></div>
+  <div class="chips" id="presets"></div>
+  <div class="chips" id="trends"></div>
+</header>
+<main>
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="empty" style="display:none"><svg class="ic"><use href="#i-search"/></svg>没有符合条件的帖子</div>
+  <div class="more" id="moreWrap" style="display:none"><button id="moreBtn">载入更多</button></div>
+</main>
+<footer>数据来源 Supabase · 每周自动更新 · 状态更改即时同步全团队 · 视频由 Instagram 官方 embed 播放</footer>
+<div id="toast"></div>
+<script id="data" type="application/json">[{"id": "DfoCtJRCbLM", "tracker": "Traditional Chinese Medicine (TCM) Wellness Center 竞对", "competitor": "sunwaytcmcentre", "caption": "明明吃很少，连喝水都胖？别盲目节食！双威中医李雯雯医师提醒：这可能是“脾虚湿气重”！\n\n脾胃运化变慢，水湿变成“痰湿”堆积在肚子上。\n.\n跟着李医师学会 3 招干货，打通排湿开关：\n1️⃣ 按揉丰隆穴：每天 3 分钟化痰祛湿。\n2️⃣ 健脾四神汤：荤素皆宜，全家老少与儿童都能喝！\n3️⃣ 生姜花椒泡脚：睡前 15 分钟驱寒排湿。\n.\n🛒 四神汤包与中药泡脚包均可在双威中医店面线下购买。\n.\n⚠️ 以上 3 招仅供日常养生参考。症状严重者，建议亲临双威中医诊所线下咨询专业中医师。\n.\n赶快点赞、收藏并分享给朋友！关注我们，带你调好体质！\n\nhttps://youtube.com/shorts/a3nx0aREN-k?feature=share", "transcript": "", "brk": "Hook类型: 痛点直击\n结构: 喝水都胖误区 → 脾虚湿气重根源 → 3招排湿干货与产品引导\n为什么火: 精准切中易胖体质人群焦虑，给出低门槛、可执行的中医调理方案\n改编角度: 结合本地生活痛点，主打“新加坡/马来西亚湿热气候如何高效祛湿”", "my": "明明吃很少，甚至连喝水都感觉在长胖？\n\n很多人遇到这种情况，就盲目开始疯狂节食。\n\n其实盲目节食根本没有用，这很可能是因为你身体脾虚湿气重。\n\n脾胃的运化变慢了，水湿在体内排不出去，就容易变成湿气堆积在肚子上。\n\n今天带你认识三个日常调理的方法。\n\n第一个方法，先做一次 AI 智能把脉。\n\n通过智能检测仪器，清楚了解自己目前的身体状况。\n\n做完会拿到一份价值 RM299 的健康风险评估报告。\n\n先了解自己的体质，才能找到真正适合自己的调理方向。\n\n第二个方法，体验全智能天灸舱调理。\n\n躺进智能艾灸舱，享受三十分钟的温热放松时光。\n\n采用三年陈艾搭配草本配方，带来温热舒适的感受。\n\n特别适合经常手脚冰冷或者容易觉得身体沉重的人。\n\n第三个方法，尝试日常的中药草本泡脚。\n\n在家里也可以进行简单的草本养生护理。\n\n温热的泡脚体验，帮助放松紧绷的身体。\n\n让日常养生慢慢变成生活中的好习惯。\n\n以前身体总觉得不舒服，却不知道问题出在哪里。\n\n只能每天靠着感觉去猜，或者盲目尝试各种方法。\n\n现在有了科学的检测和温和的调理方式。\n\n不用再盲目猜测，而是真正去了解自己的身体。\n\n我们有 Alma 和 Bayan Lepas 两间店，AI 把脉和艾灸都需要预约。\n\n点击 WhatsApp，告诉我们你想预约的时间。\n\n别再猜自己的身体。先了解，再调理。", "tags": "", "bait": false, "type": "Video", "likes": 44, "comments": 0, "er": 6.09, "followers": 722, "date": "2026-11-12", "url": "https://www.instagram.com/p/DfoCtJRCbLM/", "video": true, "ratio": 0, "score": 6.09, "status": "未处理", "x": 1.6}, {"id": "DfD_eBTDx2n", "tracker": "Traditional Chinese Medicine (TCM) Wellness Center 竞对", "competitor": "sunwaytcmcentre", "caption": "𝑻𝒉𝒆 𝑨𝒓𝒕 𝒐𝒇 𝒀𝒂𝒏𝒈 𝑺𝒉𝒆𝒏𝒈 (养生)——— 🙋\n𝑵𝒐𝒖𝒓𝒊𝒔𝒉𝒊𝒏𝒈 𝑸𝒊, 𝑺𝒕𝒓𝒆𝒏𝒈𝒕𝒉𝒆𝒏𝒊𝒏𝒈 𝑱𝒐𝒊𝒏𝒕𝒔 & 𝑬𝒗𝒆𝒓𝒚𝒅𝒂𝒚 𝑺𝒆𝒍𝒇-𝑪𝒂𝒓𝒆\n.\nSunway TCM Centre was delighted to bring an integrative approach to healthy ageing to the Subang Jaya Buddhist Association, with our speakers 𝐌𝐬. 𝐋𝐞𝐞 𝐖𝐞𝐧 𝐖𝐞𝐧, TCM Practitioner, and 𝐌𝐬. 𝐖𝐞𝐧𝐠 𝐌𝐚𝐲 𝐋𝐢𝐧, Registered Dietitian.\n.\nTogether, they explored how Traditional Chinese Medicine (TCM) and Western nutrition can complement each other to support healthy ageing, strengthen mobility, and maintain everyday vitality. 🤝\n.\n🌿 Wen Wen Lee | TCM Practitioner\n\n“From a TCM perspective, healthy ageing begins with nourishing Kidney Qi (肾为先天之本), the foundation of our congenital essence, to support bone and joint health, and strengthening Spleen Qi (脾为后天之本), the foundation of acquired nourishment, to support digestion and overall vitality.”\n.\n🥗 May Lin | Registered Dietitian\n\n“Healthy ageing is not just about preventing disease, but also maintaining the strength and independence to enjoy everyday life.”\n\nMay Lin s", "transcript": "", "brk": "Hook类型: 痛点直击\n结构: 养生讲座回顾 → 中西医结合理念 → 肾脾调理与营养干预\n为什么火: 结合中西医双视角科普抗衰老，戳中华人长寿与关节健康的痛点。\n改编角度: 拍摄中医师与营养师同框短视频，直击“中西医如何结合保养关节”这一话题。", "my": "明明才30出头，身体却像提前进入退休模式了吗？\n\n很多人以为，身体变差只是因为年纪大了或者工作太忙。\n\n其实，真正的原因是没有从根本上了解自己的体质状况。\n\n想要做好日常养护，其实可以尝试这三个方法。\n\n第一步，先做一次AI智能把脉。\n几分钟就能清楚了解目前的身体状况。\n做完还能拿到一份价值RM299的健康风险评估报告。\n\n第二步，体验针对性的智能艾灸。\n躺进智能艾灸舱享受30分钟温热放松。\n3年陈艾结合草本配方带来温暖舒适的感受。\n\n第三步，给生活按个Pause开启Wellness Mode。\n从忙碌模式切换到放松模式。\n给自己安排一场不一样的Wellness Date。\n\n以前总是靠感觉猜自己的身体状况，试过很多方法都抓不到重点。\n\n用对方法了解体质之后，才能真正做好日常养护。\n\n现在就点击WhatsApp告诉我们你想预约的时间。\n\n好好照顾自己，也是一件很重要的事。", "tags": "SunwayTCM, YangSheng, HealthyAgeing, TraditionalChineseMedicine, Nutrition, IntegrativeHealth", "bait": false, "type": "Carousel", "likes": 30, "comments": 0, "er": 4.16, "followers": 722, "date": "2026-10-29", "url": "https://www.instagram.com/p/DfD_eBTDx2n/", "video": false, "ratio": 0, "score": 4.16, "status": "未处理", "x": 1.1}, {"id": "DeqPixNDGvI", "tracker": "Traditional Chinese Medicine (TCM) Wellness Center 竞对", "competitor": "sunwaytcmcentre", "caption": "宝宝难带？积食不长肉？经常感冒？或是注意力难以集中？👶👧👦\n\nIs your child struggling with poor appetite, frequent colds, or concentration issues?\n.\n双威中医非常荣幸迎来了 #郑秀芬博士中医师 的加入！ 郑医师专注小儿全科与发育辅助，致力于通过温和、安全且个性化的中医方案，陪伴孩子健康成长。\n\nSunway TCM Centre is delighted to welcome Dr. Teh Siew Hoon (PhD) to our team! Specializing in General Paediatrics and Developmental Support, Dr. Teh offers safe, gentle, and personalized TCM conditioning tailored to your child’s needs.\n.\n✅ Paediatric Tuina combined with gentle acupuncture, highly accepted by children.\n✅ Relief for indigestion, picky eating, poor growth, and restless sleep.\n✅ Helps improve hyperactivity, inattention, and emotional fluctuations, while supporting speech and motor skills coordination.\n✅ Strengthens natural immunity to support healthy child development.\n.\n📅 门诊时间 / Consultation Schedule: 每周六 (Every Saturday)\n📍 地点 / Location: Sunway TCM Centre (HQ)\n.\nWhatsApp / Call: +6011-5953 7993 / +603-5611 0599\n.\n#SunwayTCMCentre #双威中医 #郑秀芬中医师 #DrTehSiewHoon #小儿推拿 #小儿中医 #小儿全科 #儿童发育", "transcript": "", "brk": "Hook类型: 痛点直击\n结构: 罗列儿童常见健康痛点 → 官宣名医入驻介绍 → 核心疗效与预约方式\n为什么火: 精准捕捉家长焦虑，推出博士名医背书建立信任感\n改编角度: 结合真实调理案例，突出小儿推拿不打针不吃药的直观优势", "my": "明明才三十出头，身体却像提前进入退休模式了吗？\n\n很多人觉得，累了只要睡一觉就能好。\n\n其实没那么简单，身体早就在发出各种小抗议。\n\n不用猜来猜去，第一步先做 AI 智能把脉。\n\n几分钟时间，就能清楚看到自己目前的身体状况。\n\n做完还会拿到一份价值两百九十九令吉的健康风险评估报告。\n\n了解之后，就可以安排适合你的艾灸调理。\n\n躺进智能艾灸舱，享受三十分钟的温热放松时光。\n\n采用三年陈艾搭配草本配方，给身体带来温暖舒适的感受。\n\n新客体验配套只需要二百六十八令吉。\n\n包含一次 AI 把脉，健康风险评估报告，还有两次全智能天灸舱调理。\n\n原价五百九十九令吉，现在就能轻松体验。\n\n以前总是靠感觉猜体质，不知道该怎么调理。\n\n现在有了 AI 智能检测，先了解，再调理，身体轻松很多。\n\n点击私信我们，告诉你想预约的时间。\n\n好好照顾自己，也是一件很重要的事。", "tags": "郑秀芬博士中医师, SunwayTCMCentre, 双威中医, 郑秀芬中医师, DrTehSiewHoon, 小儿推拿, 小儿中医, 小儿全科, 儿童发育辅助, ADHD中医调理, 自闭症中医辅助, 体质调理, PediatricTCM", "bait": false, "type": "Image", "likes": 25, "comments": 1, "er": 3.6, "followers": 722, "date": "2026-10-19", "url": "https://www.instagram.com/p/DeqPixNDGvI/", "video": false, "ratio": 0, "score": 3.88, "status": "未处理", "x": 1.0}, {"id": "DeGMZPJj3-u", "tracker": "Traditional Chinese Medicine (TCM) Wellness Center 竞对", "competitor": "sunwaytcmcentre", "caption": "Feeling Out of Balance? Restore Your Systemic Harmony | \n⚖️ 身体失衡？重塑健康律动\n.\nAre allergic reactions, muscle aches, or bloating constantly disrupting your daily life?\n\nAt Sunway TCM Centre, Ms. Lee Wen Wen (#李雯雯中医师) specializes in combining acupuncture and herbal medicine to address sub-health conditions and pain management. \n\nThrough Dr. Tan's Balance Acupuncture and holistic body constitution restructuring, we aim to address the root cause of your discomforts.\n.\n📲 Book Your Appointment Today:\nWhatsApp: +6011-5953 7993\nCall: +603-5611 0599", "transcript": "", "brk": "Hook类型: 痛点直击\n结构: 罗列日常不适症状 → 介绍医师与特色疗法 → 呼吁预约导流\n为什么火: 精准切中现代人亚健康痛点，展示了专业权威的中医解决方案\n改编角度: 针对华人最关注的湿气或失眠痛点，用对比图直观呈现调理前后的改善效果", "my": "经常胃胀气？肚子总是胀胀的？\n明明没有什么大事，身体却总是感觉沉沉的、提不起精神？\n很多人遇到这些小困扰，第一反应以为只是吃坏肚子，或者随便买个药吃就算了。\n其实，这可能是身体在发出失衡的信号，不是单靠休息就能解决的。\n身体出状况的时候，很多人以为只能吃药或者靠时间硬扛。\n其实，从传统中医的养生理念来看，先了解体质，再进行针对性调理，才是更温和的方式。\n今天带你了解三个日常养护身体的方法，帮你找回轻松的感觉。\n第一个方法，做一次 AI 智能把脉。\n不需要猜测自己的身体状况，花几分钟时间，就能清楚看到目前的各项身体机能指标。\n检测完成后，还能拿到一份健康风险评估报告。\n第二个方法，体验全智能天灸舱调理。\n躺进智能艾灸舱里，感受 3 年陈艾与草本配方带来的温热护理。\n每次 30 分钟，可能帮助舒缓肩颈紧绷或手脚冰冷的困扰，带来温暖舒适的感受。\n第三个方法，尝试日常草本温养。\n比如使用艾脐贴或者进行中药泡脚，从日常细节开始，慢慢调理脾胃和身体状态。\n以前身体不舒服，只能靠猜，不知道该怎么调理。\n现在有了智能检测和传统艾灸结合的方式，先了解体质，再针对性调理，让养生更简单。\n我们有首次体验配套，原价 RM599，现在试用价只需 RM268。\n包含 1 次 AI 把脉、健康风险评估报告，以及 2 次全智能天灸舱调理。\n每个人的体质不一样，先来体验，再决定适不适合你。\n点下方链接，发消息告诉我们你想预约的时间。", "tags": "李雯雯中医师", "bait": false, "type": "Image", "likes": 22, "comments": 0, "er": 3.05, "followers": 722, "date": "2026-10-05", "url": "https://www.instagram.com/p/DeGMZPJj3-u/", "video": false, "ratio": 0, "score": 3.05, "status": "未处理", "x": 0.8}, {"id": "DetJU9vAT8-", "tracker": "Traditional Chinese Medicine (TCM) Wellness Center 竞对", "competitor": "sunwaytcmcentre", "caption": "Nurturing the future of integrative healthcare! 🎓🌿\n\nOn October 19, 2026, Sunway TCM Centre had the pleasure of hosting Year 2 Pharmacy students from the Faculty of Pharmacy, Universiti Kebangsaan Malaysia (UKM) for an insightful educational visit as part of their Traditional and Complementary Medicine (T&CM) course.\n\nDuring the visit, students explored:\n📚 General landscape of T&CM in Malaysia\n🏥 Clinical practices and services offered at Sunway TCM Centre\n🤝 The complementary role of T&CM within modern healthcare\n💊 Interprofessional roles of Pharmacists and Herbalists in T&CM\n🚶‍♂️ A guided walkabout and facility tour of our clinical environment\n\nThank you to the future pharmacists from UKM for your enthusiasm and passion for integrative medicine! We are proud to support academic learning and foster collaboration between conventional pharmacy and traditional healthcare. 💚\n\n#SunwayTCM #UKM #FacultyOfPharmacy #TCMInMalaysia #IntegrativeMedicine #EducationalVisit #FuturePharmacists #Clinical", "transcript": "", "brk": "Hook类型: 权威背书\n结构: 行业参访 → 揭秘现代中医 → 学术合作\n为什么火: 展现专业实力与机构权威性增强信任感\n改编角度: 联合本地名校或专家探店，展示中医中心现代化医疗环境以建立专业信任。", "my": "明明才30出头\n身体却像提前进入退休模式\n🥲\n下班只想躺平\n什么都不想做\n😮‍💨\n\n很多人以为\n调理身体一定要吃苦药\n或者花大钱买一堆保健品\n❌\n\n其实不是这样的\n与其盲目地靠感觉猜\n不如先真正了解自己的身体\n🌿\n\n来 JIUMOXA 灸大夫\n带你看看现代人怎么做养生\n✨\n\n① 先做 AI 智能把脉\n⌚\n几分钟的时间\n清楚看到自己目前的身体状况\n做完还会拿到一份价值 RM299 的健康风险评估报告\n📄\n不用盲目猜\n先了解体质再说话\n\n② 躺进智能艾灸舱\n🔥\n3 年陈艾结合草本配方\n享受 30 分钟的温热放松时光\n感受艾草带来的暖意\n可能帮助舒缓肩颈紧绷与手脚冰冷\n让身体感觉更轻松\n\n③ 选择适合的调理配套\n💚\n首次体验配套只要 RM268\n包含 1 次 AI 把脉\n还有 2 次全智能天灸舱调理\n原价 RM599 的配套\n现在带你体验科学与传统的结合\n\n以前总是靠感觉猜体质\n结果常常越调越累\n🥲\n现在先做 AI 把脉了解情况\n再针对性地安排艾灸调理\n让养生变得更清楚明白\n\n📍\n我们在 Alma Bukit Mertajam 和 Bayan Lepas 都有门店\nAI 把脉和艾灸都需要提前预约\n💌\n点击 WhatsApp 告诉我们你想预约的时间\n了解身体状况\n好好照顾自己\n也是一件很重要的事 🤍", "tags": "SunwayTCM, UKM, FacultyOfPharmacy, TCMInMalaysia, IntegrativeMedicine, EducationalVisit, FuturePharmacists, ClinicalTour", "bait": false, "type": "Carousel", "likes": 21, "comments": 0, "er": 2.91, "followers": 722, "date": "2026-10-20", "url": "https://www.instagram.com/p/DetJU9vAT8-/", "video": false, "ratio": 0, "score": 2.91, "status": "未处理", "x": 0.8}, {"id": "Dd6SNYzhMKZ", "tracker": "Traditional Chinese Medicine (TCM) Wellness Center 竞对", "competitor": "virtuetcm.my", "caption": "Mont Kiara can be busy, so we wanted to create a little space where you can slow down. 🌿\n\nCome in, have some tea, listen to a little music, breathe in the gentle scent of herbs, and take a moment for yourself.\n\nWhether you’re here for a treatment or simply need some time to pause, we’re here to care for you.\n\nA little calm, right here in Mont Kiara. 🤍\n\n📍 Virtue TCM @ Mont Kiara, Arcoris\n✨  Open daily 10am–6pm, closed on Wednesdays\n📲 Book your appointment via WhatsApp or online booking.", "transcript": "Music Music Music Music Music Music Music Music", "brk": "Hook类型: 身份共鸣\n结构: 环境氛围展示 → 核心服务体验 → 预约导流转化\n为什么火: 精准捕捉都市白领渴望逃离快节奏的心理，治愈感氛围拉满\n改编角度: 结合中医馆特色，用“都市绿洲”概念拍摄沉浸式解压短片吸引忙碌上班族", "my": "明明才30出头身体却像提前进入退休模式\n\n很多人以为下班回家躺平就能恢复精力\n其实身体的疲惫根本没有真正卸下来\n\n其实问题不是不够休息\n而是身体气血运行慢了\n湿气和紧绷一直卡在里面\n\n第一步先做AI智能把脉\n几分钟就能清楚了解自己目前的身体状况\n还包含价值RM299的健康风险评估报告\n让你不再靠感觉猜身体哪里累\n\n第二步是享受20分钟草本泡脚\n用12味草本温暖双脚\n先把紧绷感卸下来\n带来温暖舒适的感受\n\n第三步是躺进智能艾灸舱\n3年陈艾结合草本配方\n进行30分钟的全身艾灸调理\n感受温热放松时光\n\n以前总觉得身体沉重提不起精神\n试过各种方法还是觉得累\n现在懂得先了解体质再针对性调理\n整个人轻松很多\n\n点击WhatsApp\n了解并预约首次体验配套RM268\n包含1次AI把脉和2次天灸舱调理\n\n养生不必等到身体不舒服才开始", "tags": "", "bait": false, "type": "Video", "likes": 129, "comments": 2, "er": 1.59, "followers": 8239, "date": "2026-09-30", "url": "https://www.instagram.com/p/Dd6SNYzhMKZ/", "video": true, "ratio": 0, "score": 1.64, "status": "未处理", "x": 9.1}, {"id": "DeCQVlugjqb", "tracker": "Traditional Chinese Medicine (TCM) Wellness Center 竞对", "competitor": "sante_beauty_tcm", "caption": "女人的情绪、睡眠、体重、疲劳感，甚至身体状态，都可能和荷尔蒙变化息息相关。\n这个 Pink October，我们不只关注乳房健康，也一起多了解自己的身体，了解自己的身体，\n不是等到身体出现问题才开始。从认识自己的荷尔蒙开始，\n照顾情绪、睡眠、能量与女性健康\n#健康馆#pinkoctober #乳癌日 #能量療癒", "transcript": "", "brk": "Hook类型: 痛点直击\n结构: 列举女性常见症状 → 引入荷尔蒙关联 → 呼吁粉红十月预防\n为什么火: 精准切中现代女性情绪、睡眠、体重等亚健康痛点，借势粉红十月传递关怀。\n改编角度: 结合中医气血与肝郁调理，拍“四大症状自查”引出TCM内调方案。", "my": "🤔 你真的了解自己的身体吗？\n\n容易累、睡不好、手脚冰冷，\n身体总是沉沉的，\n很多时候，我们都只是靠感觉猜。\n\n以为多休息几天就会好，\n以为吃点保健品就能解决，\n其实身体的每一个信号，\n都在提醒你先去了解它。\n\n不用靠猜，\n带你用科学的方式看懂身体。\n先做 1 次 AI 智能把脉，\n花几分钟时间，\n清楚看到自己目前的身体状况。\n做完还会拿到一份健康风险评估报告，\n价值 RM299。\n\n了解之后，\n再安排适合你的艾灸调理。\n躺进智能艾灸舱，\n享受 30 分钟温热放松，\n感受 3 年陈艾与草本配方带来的暖意。\n\n以前身体不舒服，\n总是不知道问题出在哪里，\n只能自己盲目忍耐。\n现在先做 AI 智能把脉，\n了解体质后再进行针对性艾灸调理，\n让身体慢慢恢复温暖与平衡。\n\n首次体验配套只要 RM268，\n包含 1 次 AI 把脉、\n健康风险评估报告，\n以及 2 次全智能天灸舱调理，\n原价可是 RM599。\n\n每个人的体质不一样，\n先来体验，\n再决定适不适合你。\n\n📍 我们的门店在 Alma Bukit Mertajam 和 Bayan Lepas，\nAI 把脉和艾灸都需要提前预约。\n\n💌 点击 WhatsApp，告诉我们你想预约的时间，\n我来帮你安排。", "tags": "健康馆, pinkoctober, 乳癌日, 能量療癒", "bait": false, "type": "Image", "likes": 13, "comments": 0, "er": 0.28, "followers": 4685, "date": "2026-10-03", "url": "https://www.instagram.com/p/DeCQVlugjqb/", "video": false, "ratio": 0, "score": 0.28, "status": "未处理", "x": 1.6}, {"id": "DeHKL5yDGM_", "tracker": "Traditional Chinese Medicine (TCM) Wellness Center 竞对", "competitor": "virtuetcm.my", "caption": "💗 A Gentle Reminder to Care for You.\n\nOctober is Breast Cancer Awareness Month — a meaningful time to pause, reconnect with your body, and become more aware of your own wellbeing.\n\nJoin us for our Breast Health & Gua Sha Massage Workshop (乳房保健与刮痧工作坊), a small-group, hands-on session guided by our experienced TCM Practitioner. 🌿\n\nYou’ll learn how to:\n\n✨ Practise gentle breast self-awareness techniques\n🌿 Understand breast health from a TCM perspective\n🪨 Learn simple Gua Sha techniques for self-care and relaxation\n💗 Build a mindful self-care practice you can continue at home\n\nYour workshop includes:\n🪨 Gua Sha stone\n🌿 Body oil\n👩🏻‍⚕️ Guided session by TCM Practitioner\n\n📅 Date: 25 Oct 2026\n⏰ Time: 10:00-11:30am\n📍 Venue: Virtue TCM @ Bangsar\n💬 English Class (中文翻译)\n🎟 RM228 Early Bird (till 20 Oct)\n\nCome as you are. Learn, reconnect, and take a little more time to care for yourself. 💗\n\nReserve your spot: https://forms.gle/LVGszUTByr74BBps6\n\nFor wellness education and self-care purposes only. Pl", "transcript": "", "brk": "Hook类型: 身份共鸣\n结构: 节日关怀提醒 → 推出工作坊 → 详细教学与礼品 → 报名Call to Action\n为什么火: 借势粉红十月乳腺癌关怀月，精准触达女性对自身健康的焦虑与关爱需求。\n改编角度: 拍摄女性日常摸胸自查痛点，结合中医刮痧疏通乳腺结节的实操画面做成短视频。", "my": "明明才30出头\n身体却像提前进入退休模式了吗\n下班只想躺平\n什么都不想做\n你可能以为\n只要多喝热水就能调理好\n其实经常手脚冰冷和体虚乏力\n往往是因为身体内部缺少了温热的力量\n不用再靠感觉猜自己的身体状况了\n先了解\n再调理\n这里有三个日常养生的小方法\n第一\n你可以先做一次 AI 智能把脉\n几分钟时间\n就能清楚看到自己目前的身体状况\n做完还会获得一份健康风险评估报告\n第二\n你可以尝试中药泡脚\n利用草本配方温热双脚\n带来温暖舒适的感受\n特别适合喜欢温热养生体验的人\n第三\n你可以躺进智能艾灸舱\n进行针对性的全身艾灸调理\n3年陈艾结合草本配方\n享受30分钟的温热放松时光\n暂时放下工作压力\n以前很多人身体不舒服时\n都不知道该从哪里开始调理\n只能盲目买各种保健品\n现在你可以直接到灸大夫艾灸养身馆\n选择首次体验配套\n只需要 RM268\n就能包含 1 次 AI 把脉\n健康风险评估报告\n以及 2 次全智能天灸舱调理\n好好照顾自己\n也是一件很重要的事\n点击 WhatsApp\n告诉我们你想预约的时间", "tags": "", "bait": false, "type": "Carousel", "likes": 15, "comments": 0, "er": 0.18, "followers": 8239, "date": "2026-10-05", "url": "https://www.instagram.com/p/DeHKL5yDGM_/", "video": false, "ratio": 0, "score": 0.18, "status": "未处理", "x": 1.0}, {"id": "DeZbnXGA71A", "tracker": "Traditional Chinese Medicine (TCM) Wellness Center 竞对", "competitor": "sante_beauty_tcm", "caption": "🇲🇾槟城 |上班族真的要试试这种放松活动\n前阵子真的觉得自己状态越来越差，情绪有点烦躁 ；肩颈也一直很酸 。刚好跟朋友聊天的时候提到想去做个 Massage 放松一下～\n结果朋友就直接推荐我来这家【Sante Beauty &TCM】，还叫我赶快去试试看所以立马冲来一探究竟！\n一进门我就先被环境吸引到。。。整个空间是那种很舒服的新中式风格，拍照也很好看～而且这里的小姐姐服务都蛮温柔的，重点是不会一直 Hard Sell，这点真的很加分！\n开始护理前有先做一个AI测试，再根据我的情况做适合的护\n这次我主要做的是胸部淋巴疏通＋肩颈这一类的护（ 整个过程大概一个小时左右，肩颈、手臂、奶部周围都会带到，整体按下来真的蛮放松的。\n\n很惊喜的是做完居然还有下午茶\n我这个大馋丫头看到甜品直接开心！！！护理完毕还能坐下来慢慢吃点东西，整个体验感真的蛮舒服～今天就先分享到这里啦。有兴趣的话可以自己去了解看看~\n\n📍Sante Beauty TCM \n☎️ 013-5437249\n\n#槟城 #槟城人 #放松好去处 ＃槟城周末 ＃槟城好去处＃槟城按摩 ＃槟城养生馆 ＃按摩放松解压 ＃身心放松好去处 ＃放松解压方式", "transcript": "我還在等我看最近發現自己的肩頸非常痠痛情緒也非常不穩定就來這一家新中市陽盛館做馬殺這滿滿的獎狀看起來很專業一開始會先幫你做個等段檢測出來的話我是滿適合做胸部護理的之後把我帶到了房間穿上衣服就開始拉整個過程大概持續一個小時不管是肩頸還是手臂或者是胸部都會按刀之後還會做刮殺做完之後感覺身體都沒有那麼堵了到了我最期待的環節就是吃這個小茶點這個泡芙很好吃還有中式糖水除了馬殺之外這裡包含的護理也滿多的你有空可以過來看看就是這一家啦記得 for the morning我們下個影片見", "brk": "Hook类型: 痛点直击\n结构: 痛点引发 → 探店体验 → 特色项目 → 惊喜结尾\n为什么火: 精准切中大马上班族肩颈酸痛与释放压力的刚需\n改编角度: 放大AI检测与中式下午茶的差异化体验，吸引注重生活品质的上班族", "my": "明明才30出头，身体却像提前进入退休模式了吗\n\n很多人以为，累了只要随便去按摩按两下就能好\n\n其实身体酸痛和精神沉重，往往是因为湿气重或者气血不通\n\n与其盲目去按摩，不如先了解自己的身体状况再来调理\n\n来 JIUMOXA 灸大夫，第一步先做 1 次 AI 智能把脉\n\n几分钟时间，就能清楚看到自己目前的身体状况\n\n做完还会拿到一份价值 RM299 的健康风险评估报告\n\n了解体质之后，就可以开始进行针对性的调理\n\n躺进智能艾灸舱，享受 30 分钟的温热放松时光\n\n3年陈艾结合草本配方，给身体带来温暖舒适的感受\n\n特别适合经常手脚冰冷或者久坐肩颈紧绷的人\n\n还有 20 分钟的 12 味草本养生泡脚可以体验\n\n从传统中医的温阳祛湿理念出发，好好放松一下\n\n以前身体紧绷的时候，总是不知道该怎么办\n\n现在有了 AI 把脉和智能艾灸，可以先了解再调理\n\n给自己安排一场不一样的养生体验，让身体慢慢恢复平衡\n\n点击 WhatsApp，告诉我们你想预约的时间", "tags": "槟城, 槟城人, 放松好去处", "bait": false, "type": "Video", "likes": 8, "comments": 0, "er": 0.17, "followers": 4685, "date": "2026-10-12", "url": "https://www.instagram.com/p/DeZbnXGA71A/", "video": true, "ratio": 0, "score": 0.17, "status": "未处理", "x": 1.0}, {"id": "DeTMxdeh1-J", "tracker": "Traditional Chinese Medicine (TCM) Wellness Center 竞对", "competitor": "virtuetcm.my", "caption": "💗 Care for your breast health, the TCM way.\n\nDiscover gentle Gua Sha techniques, explore traditional Qi and Blood flow concepts, and learn more about breast self-care and awareness.\n\n🌿 Breast Health & Gua Sha Massage Workshop \n📅 25 October \n📍 Kuala Lumpur & George Town \n🎟️ Registration link in bio \n✨ Early Bird ends 20 October!\n\nLimited spots available. DM us to reserve yours.", "transcript": "...", "brk": "Hook类型: 痛点直击+健康焦虑\n结构: 提出乳腺保养痛点 → 演示中医刮痧手法 → 引导报名线下工作坊\n为什么火: 切中女性乳腺健康盲区，用直观的中医疏通手法建立专业信任与好奇。\n改编角度: 结合现代女性熬夜结节痛点，展示3分钟居家乳腺经络疏通，引流到店体验。", "my": "明明才30出头，身体却像提前进入退休模式了吗？\n\n很多人以为，累了只要回家躺平就能恢复。\n\n其实不是，身体总是沉沉的，往往是因为湿气积压和气血运行不顺畅。\n\n今天分享3个温和调理身体的方法。\n\n第一步，先了解目前的身体状况。\n通过AI智能把脉仪，花几分钟检测身体各项机能指标，清楚看到自己的健康状况，还会拿到一份价值RM299的健康风险评估报告。\n不用再靠感觉猜测。\n\n第二步，进行针对性的艾灸调理。\n躺进智能艾灸舱，享受30分钟温热放松，3年陈艾结合草本配方，给身体带来温热养护，特别适合长期待在冷气房和手脚冰凉的人。\n\n第三步，日常居家做点简单的草本护理。\n把艾脐贴贴在肚脐或脚底，19种草本原料温和呵护脾胃，不用吞也不用熬，轻松融入日常生活中。\n\n以前总是靠猜来照顾身体，结果还是经常累、睡不好。\n现在用AI把脉先了解体质，再安排合适的艾灸调理，整个人感觉轻松很多。\n\n想先了解自己的身体状况吗？\n点击WhatsApp，告诉我们你想预约的时间。\n\n养生不必等到身体不舒服才开始。", "tags": "", "bait": false, "type": "Video", "likes": 10, "comments": 0, "er": 0.12, "followers": 8239, "date": "2026-10-10", "url": "https://www.instagram.com/p/DeTMxdeh1-J/", "video": true, "ratio": 0, "score": 0.12, "status": "未处理", "x": 0.7}, {"id": "De9asksgcqe", "tracker": "Traditional Chinese Medicine (TCM) Wellness Center 竞对", "competitor": "sante_beauty_tcm", "caption": "「氣結則血瘀」\n在中医观念里，乳房是肝经、胃经行经之处。\n长期受生闷气、压抑情绪，会导致「肝气郁结」。\n气机一旦堵塞，血液循环就会变差，久而久之容易在胸部形成「瘀」和「结」（例如结节或增生）。\n小结：这是在提醒您，\n身心的能量管道「堵住」了，该疏通了！\n#请好好爱自己", "transcript": "", "brk": "Hook类型: 痛点直击\n结构: 情绪原因 → 生理机制 → 结语提醒\n为什么火: 准确戳中现代女性生闷气导致乳腺结节的健康焦虑。\n改编角度: 结合中医推拿或艾灸手法，展示如何现场疏通经络化解气结。", "my": "明明才30出头，身体为什么总像提前进入退休模式？\n\n下班只想躺平，身体沉重得提不起精神，很多人以为只是工作太累。\n\n其实不是因为你老了，而是身体的能量管道堵住了。\n\n身体开始发出信号，用三个方法带你认识调养。\n\n第一步，先了解自己的身体状况。\n\n别再靠感觉猜了，做一次AI智能把脉，几分钟就能清楚看到目前的身体状况，还附带一份健康风险评估报告。\n\n第二步，给身体安排温热放松时光。\n\n躺进智能艾灸舱，30分钟的温热调理，感受3年陈艾与草本配方带来的暖意，舒缓日常的紧绷与不适。\n\n第三步，从日常细节开始护理。\n\n尝试温和的草本泡脚或是贴在肚脐的艾脐贴，把传统中医的养生理念融入生活。\n\n以前身体不舒服时，总是不知道问题出在哪里，只能盲目地猜。\n\n现在有了科学的检测和温和的调理，先了解体质，再针对性调理，找回身体的平衡与轻松。\n\n养生不必等到身体不舒服才开始。\n\n点击WhatsApp，告诉我们你想预约的时间，来体验我们的首次体验配套。\n\n好好照顾自己，也是一件很重要的事。", "tags": "请好好爱自己", "bait": false, "type": "Image", "likes": 5, "comments": 0, "er": 0.11, "followers": 4685, "date": "2026-10-26", "url": "https://www.instagram.com/p/De9asksgcqe/", "video": false, "ratio": 0, "score": 0.11, "status": "未处理", "x": 0.6}]</script>
+<script>
+const DATA = JSON.parse(document.getElementById('data').textContent);
+const SUPA = 'https://yindrshypvwvruxvkkfp.supabase.co';
+const ANON = 'sb_publishable_CiUtpg2DHhUZnxL_5JSRmw_UIunJtrN';
+const STATUSES = ["未处理", "拍摄中", "已处理", "跳过"];
+document.getElementById('updated').textContent = '更新于 2026-11-13 11:39 (GMT+8)';
+const PAGE = 48;
+let shown = PAGE;
+let videoOnly = false;
+let curTab = '全部';
+
+const $ = id => document.getElementById(id);
+const fmt = n => n >= 1e6 ? (n/1e6).toFixed(1)+'M' : n >= 1e3 ? (n/1e3).toFixed(1)+'K' : String(n);
+const getKey = () => ANON;  // anon key is baked in — safe, can only change status
+const I = n => '<svg class="ic"><use href="#i-' + n + '"/></svg>';
+const esc = s => String(s).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+const byRec = {}; DATA.forEach(d => byRec[d.id] = d);
+const TRENDS = [];
+DATA.forEach(d => {
+  d.days = d.date ? Math.max(0, Math.floor((Date.now() - new Date(d.date + 'T00:00:00')) / 864e5)) : null;
+  d.horse = d.followers > 0 && d.followers < 50000 && ((d.x || 0) >= 2 || d.score >= 10);
+});
+const PRESETS = [
+  { k: 'px', icon: 'trend', label: '真爆款 ×2+', f: d => (d.x || 0) >= 2 },
+  { k: 'pn', icon: 'star', label: '近7天', f: d => d.days !== null && d.days <= 7 },
+  { k: 'ph', icon: 'zap', label: '黑马', f: d => d.horse },
+  { k: 'pb', icon: 'magnet', label: '引流帖', f: d => d.bait },
+];
+const presetOn = {};
+
+function toast(msg, ok) {
+  const t = $('toast'); t.textContent = msg; t.classList.add('show');
+  t.style.borderColor = ok ? 'var(--green)' : 'var(--red)';
+  clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+// filters
+const comps = [...new Set(DATA.map(d => d.competitor))].sort();
+comps.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = '@'+c; $('fComp').appendChild(o); });
+[...new Set(DATA.map(d => d.tracker))].forEach(t => { const o = document.createElement('option'); o.value = t; o.textContent = t; $('fTracker').appendChild(o); });
+
+function matchQ(d) {
+  const q = ($('fSearch').value || '').trim().toLowerCase();
+  return !q || (d.caption + ' ' + (d.tags || '') + ' ' + (d.transcript || '') + ' ' + (d.brk || '') + ' ' + d.competitor).toLowerCase().includes(q);
+}
+
+function basePool() {
+  const t = $('fTracker').value, c = $('fComp').value;
+  return DATA.filter(d => (!t || d.tracker === t) && (!c || d.competitor === c) && (!videoOnly || d.video)
+    && matchQ(d) && PRESETS.every(p => !presetOn[p.k] || p.f(d)));
+}
+
+function filtered() {
+  const s = $('fSort').value;
+  let arr = basePool().filter(d => curTab === '全部' || d.status === curTab);
+  const key = { score:'score', er:'er', comments:'comments', likes:'likes', x:'x' }[s];
+  if (s === 'date') arr.sort((a,b) => (b.date||'').localeCompare(a.date||''));
+  else arr.sort((a,b) => (b[key]||0) - (a[key]||0));
+  return arr;
+}
+
+let dragRec = null;
+
+function renderTabs() {
+  const pool = basePool();
+  const counts = { '全部': pool.length };
+  STATUSES.forEach(s => counts[s] = pool.filter(d => d.status === s).length);
+  $('tabs').innerHTML = '';
+  ['全部', ...STATUSES].forEach(name => {
+    const el = document.createElement('div');
+    el.className = 'tab' + (curTab === name ? ' on' : '') + (name !== '全部' ? ' droppable' : '');
+    el.innerHTML = esc(name) + ' <span class="cnt">' + counts[name] + '</span>';
+    el.onclick = () => { curTab = name; shown = PAGE; render(); };
+    if (name !== '全部') {
+      el.ondragover = e => { if (dragRec) { e.preventDefault(); el.classList.add('over'); } };
+      el.ondragleave = () => el.classList.remove('over');
+      el.ondrop = e => {
+        e.preventDefault(); el.classList.remove('over');
+        const d = byRec[dragRec]; dragRec = null;
+        if (d && d.status !== name) setStatus(d, name);
+      };
+    }
+    $('tabs').appendChild(el);
+  });
+}
+
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const el = e.target, pid = el.dataset.pid;
+      if (!el.querySelector('iframe')) {
+        const f = document.createElement('iframe');
+        f.src = 'https://www.instagram.com/p/' + pid + '/embed/';
+        f.loading = 'lazy'; f.allow = 'autoplay; encrypted-media';
+        el.appendChild(f);
+      }
+      io.unobserve(el);
+    }
+  });
+}, { rootMargin: '400px' });
+
+async function setStatus(d, val) {
+  try {
+    const r = await fetch(SUPA + '/rest/v1/posts?post_id=eq.' + encodeURIComponent(d.id), {
+      method: 'PATCH',
+      headers: { 'apikey': ANON, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+      body: JSON.stringify({ status: val })
+    });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    d.status = val;
+    cacheStatus(d.id, val);
+    toast('✓ @' + d.competitor + ' 已移到「' + val + '」', true);
+  } catch (e) {
+    toast('更新失败: ' + e.message + (String(e.message).includes('401') || String(e.message).includes('403') ? ' — 密钥无效?' : ''), false);
+  }
+  render();
+}
+
+function card(d, idx) {
+  const el = document.createElement('div');
+  el.className = 'card' + ((d.x || 0) >= 2 ? ' outlier' : '');
+  el.style.animationDelay = Math.min(idx % PAGE, 14) * 30 + 'ms';
+  el.draggable = true;
+  el.ondragstart = e => {
+    dragRec = d.id;
+    e.dataTransfer.effectAllowed = 'move';
+    el.classList.add('lifting');
+    document.body.classList.add('dragging');
+  };
+  el.ondragend = () => {
+    el.classList.remove('lifting');
+    document.body.classList.remove('dragging');
+    dragRec = null;
+  };
+  const typeIcon = d.video ? 'video' : (d.type === 'Carousel' ? 'layers' : 'image');
+  const days = d.days, horse = d.horse;
+  const ago = days === null ? '' : (days === 0 ? '今天' : days + '天前');
+  const lines = (d.caption || '').split('\n').map(l => l.trim()).filter(Boolean);
+  const hook = lines[0] || '';
+  const tr = (d.transcript && d.transcript !== '(转录失败)' && d.transcript !== '(无口播内容)') ? d.transcript : '';
+  el.innerHTML = `
+    <div class="embed" data-pid="${d.id}"><div class="ph"><svg class="ic"><use href="#i-${typeIcon}"/></svg></div></div>
+    <div class="meta">
+      <div class="row1">
+        <span class="handle" title="拖到上方 tab 即可归类">${I('grip')}</span>
+        <a class="who" href="https://www.instagram.com/${d.competitor}/" target="_blank">@${d.competitor}</a>
+        <span class="badge">${d.type || '-'}</span>
+        ${days !== null && days <= 7 ? '<span class="badge bnew">' + I('star') + '新帖</span>' : ''}
+        ${horse ? '<span class="badge bhorse">' + I('zap') + '黑马</span>' : ''}
+        ${d.bait ? '<span class="badge bbait" title="「留言XX」引流打法 — 评论被引流放大,漏斗设计值得学">' + I('magnet') + '引流</span>' : ''}
+        <span class="date" title="${d.date || ''}">${ago}</span>
+      </div>
+      <div class="nums">
+        <span class="num hot" title="Viral Score">${I('flame')}<b>${d.score}</b></span>
+        ${(d.x || 0) >= 2 ? '<span class="num x" title="是自家平均热度的多少倍">' + I('trend') + '<b>×' + d.x + '</b></span>' : ''}
+        <span class="num er" title="Engagement Rate">${I('pct')}<b>${d.er}%</b></span>
+        <span class="num" title="Likes">${I('heart')}<b>${d.likes > 0 ? fmt(d.likes) : '隐藏'}</b></span>
+        <span class="num" title="Comments">${I('msg')}<b>${fmt(d.comments)}</b></span>
+        <span class="num" title="Followers">${I('users')}<b>${fmt(d.followers)}</b></span>
+      </div>
+      <div class="cap" onclick="this.classList.toggle('open')"></div>
+      ${d.brk ? '<div class="ai" onclick="this.classList.toggle(&quot;open&quot;)"></div>' : ''}
+      ${d.my ? '<div class="mine" onclick="this.classList.toggle(&quot;open&quot;)"></div>' : ''}
+      <div class="srow"><label>状态</label><select class="status btn s${d.status}"></select>
+        <button class="abtn copy" title="复制完整文案">${I('copy')}文案</button>
+        ${tr ? '<button class="abtn mic" title="复制视频口播逐字稿">' + I('mic') + '口播</button>' : ''}
+        ${d.my ? '<button class="abtn minec" title="复制我的改写口播稿(可直接拍)">' + I('mic') + '我的稿</button>' : ''}
+        <button class="abtn brief" title="复制拍摄 Brief(数据+Hook+AI拆解+我的稿+口播稿+文案)">${I('clip')}Brief</button>
+        <a class="abtn" href="${d.url}" target="_blank" title="打开 Instagram 原帖">${I('ext')}</a></div>
+    </div>`;
+  const capEl = el.querySelector('.cap');
+  const restTxt = lines.slice(1).join('\n');
+  capEl.innerHTML = hook ? '<b>' + esc(hook) + '</b>' + (restTxt ? '<br>' + esc(restTxt).replace(/\n/g, '<br>') : '') : '';
+  const aiEl = el.querySelector('.ai');
+  if (aiEl) aiEl.innerHTML = '<b>💡 AI 拆解</b><br>' + esc(d.brk).split(String.fromCharCode(10)).join('<br>');
+  const myEl = el.querySelector('.mine');
+  if (myEl) myEl.innerHTML = '<b>🎬 我的版本(可直接拍)</b><br>' + esc(d.my).split(String.fromCharCode(10)).join('<br>');
+  const sel = el.querySelector('.status');
+  STATUSES.forEach(s => { const o = document.createElement('option'); o.value = s; o.textContent = s; sel.appendChild(o); });
+  sel.value = d.status;
+  sel.onchange = () => setStatus(d, sel.value);
+  el.querySelector('.copy').onclick = () =>
+    navigator.clipboard.writeText(d.caption || '').then(() => toast('✓ 文案已复制', true));
+  const micBtn = el.querySelector('.mic');
+  if (micBtn) micBtn.onclick = () =>
+    navigator.clipboard.writeText(tr).then(() => toast('✓ 口播稿已复制', true));
+  const mineBtn = el.querySelector('.minec');
+  if (mineBtn) mineBtn.onclick = () =>
+    navigator.clipboard.writeText(d.my).then(() => toast('✓ 我的改写稿已复制', true));
+  el.querySelector('.brief').onclick = () => {
+    const NL = String.fromCharCode(10);
+    const parts = ['🎬 爆款参考 @' + d.competitor + ((d.x || 0) >= 2 ? '(自家平均 ×' + d.x + ')' : ''),
+      '📊 🔥' + d.score + ' | ER ' + d.er + '% | ❤️ ' + (d.likes > 0 ? fmt(d.likes) : '隐藏') +
+      ' | 💬 ' + fmt(d.comments) + ' | 👥 ' + fmt(d.followers) + (ago ? ' | ' + ago : ''),
+      '🔗 ' + d.url, '✍️ Hook: ' + hook];
+    if (d.brk) parts.push('——— AI 拆解 ———', d.brk);
+    if (d.my) parts.push('——— 我的版本(可直接拍)———', d.my);
+    if (tr) parts.push('——— 竞对原口播稿 ———', tr);
+    parts.push('——— 完整文案 ———', d.caption || '');
+    navigator.clipboard.writeText(parts.join(NL)).then(() => toast('✓ Brief 已复制,可直接发给拍摄/剪辑', true));
+  };
+  io.observe(el.querySelector('.embed'));
+  return el;
+}
+
+function render() {
+  renderTabs();
+  const arr = filtered();
+  const grid = $('grid'); grid.innerHTML = '';
+  arr.slice(0, shown).forEach((d, i) => grid.appendChild(card(d, i)));
+  $('empty').style.display = arr.length ? 'none' : '';
+  $('moreWrap').style.display = arr.length > shown ? '' : 'none';
+}
+
+
+function applyStatusCache() {
+  try {
+    const c = JSON.parse(localStorage.getItem('st_cache') || '{}');
+    Object.keys(c).forEach(rid => { const d = byRec[rid]; if (d) d.status = c[rid]; });
+  } catch (e) {}
+}
+
+function cacheStatus(rid, val) {
+  try {
+    const c = JSON.parse(localStorage.getItem('st_cache') || '{}');
+    c[rid] = val; localStorage.setItem('st_cache', JSON.stringify(c));
+  } catch (e) {}
+}
+
+// live status refresh (so weekly-baked page shows current statuses)
+async function refreshStatuses() {
+  applyStatusCache(); render();  // last-known statuses first
+  if (Date.now() - (+localStorage.getItem('st_ts') || 0) < 600000) return;  // 10-min throttle
+  localStorage.setItem('st_ts', String(Date.now()));
+  const fresh = {};
+  try {
+    const r = await fetch(SUPA + '/rest/v1/posts?select=post_id,status', { headers: { 'apikey': ANON } });
+    if (!r.ok) return;
+    (await r.json()).forEach(row => {
+      const d = byRec[row.post_id];
+      if (d) d.status = row.status || '未处理';
+      if (row.status && row.status !== '未处理') fresh[row.post_id] = row.status;
+    });
+    localStorage.setItem('st_cache', JSON.stringify(fresh));
+    render();
+  } catch (e) {}
+}
+
+['fTracker','fComp','fSort'].forEach(id => $(id).onchange = () => { shown = PAGE; render(); });
+$('fSearch').oninput = () => { shown = PAGE; render(); };
+$('fVideo').onclick = () => { videoOnly = !videoOnly; $('fVideo').classList.toggle('on', videoOnly); shown = PAGE; render(); };
+$('moreBtn').onclick = () => { shown += PAGE; render(); };
+
+// preset quick filters
+$('presets').innerHTML = '<span class="lbl">快筛</span>';
+PRESETS.forEach(p => {
+  const c = document.createElement('span'); c.className = 'chip2';
+  c.innerHTML = I(p.icon) + esc(p.label);
+  c.onclick = () => { presetOn[p.k] = !presetOn[p.k]; c.classList.toggle('on', presetOn[p.k]); shown = PAGE; render(); };
+  $('presets').appendChild(c);
+});
+
+// trending hashtags among outlier posts
+if (TRENDS.length) {
+  $('trends').innerHTML = '<span class="lbl">爆款热词</span>';
+  TRENDS.forEach(([tag, n]) => {
+    const c = document.createElement('span'); c.className = 'chip2';
+    c.textContent = '#' + tag + ' ' + n;
+    c.onclick = () => { $('fSearch').value = $('fSearch').value === tag ? '' : tag; shown = PAGE; render(); };
+    $('trends').appendChild(c);
+  });
+} else { $('trends').style.display = 'none'; }
+
+render();
+refreshStatuses();
+</script>
+</body>
+</html>

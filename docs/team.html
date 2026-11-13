@@ -1,25 +1,451 @@
 <!DOCTYPE html>
-<html lang="zh"><head>
+<html lang="zh">
+<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<meta http-equiv="refresh" content="60">
-<title>爆款雷达 · 还在加载</title>
+<title>工作台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-  body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
-       background:#0a0d13;color:#e8e8ea;text-align:center;padding:24px;
-       font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif}
-  .spin{width:34px;height:34px;margin:0 auto 26px;border:3px solid #2a2f3a;
-        border-top-color:#ff785a;border-radius:50%;animation:s 1s linear infinite}
-  @keyframes s{to{transform:rotate(360deg)}}
-  h1{font-size:23px;margin:0 0 14px;font-weight:600}
-  p{margin:8px 0;color:#9a9aa2;font-size:15px;line-height:1.75}
-  .hint{margin-top:30px;font-size:13.5px;color:#6e6e78}
-  @media(prefers-reduced-motion:reduce){.spin{animation:none}}
-</style></head><body><div>
-  <div class="spin"></div>
-  <h1>你的页面还在加载中,请稍等</h1>
-  <p>第一次大约需要 20-60 分钟。</p>
-  <p>这一页会自己刷新,你可以先去忙别的。</p>
-  <p class="hint">等很久都没变?回到安装 SOP 第 7 步,<br>到仓库的 Actions 看 Sync Content 有没有跑完。</p>
-</div></body></html>
+  :root {
+    --bg:#0a0d13; --card:#11151d; --card-hi:#151a24; --border:#1d2430; --border-hi:#2c3546;
+    --text:#e8ecf3; --muted:#8a94a6; --faint:#5b6577; --accent:#5ea1ff; --green:#3fd68f;
+    --orange:#f0a33f; --pink:#ff6b9d; --red:#ff5c5c; --fire1:#ff8a3d; --fire2:#ff4d6d;
+    --font:'Inter',-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;
+    --disp:'Space Grotesk','Inter','PingFang SC','Microsoft YaHei',sans-serif;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); color:var(--text); font-family:var(--font); -webkit-font-smoothing:antialiased; }
+  ::selection { background:rgba(94,161,255,.3); }
+  ::-webkit-scrollbar { width:10px; } ::-webkit-scrollbar-thumb { background:#232c3b; border-radius:8px; }
+  :focus-visible { outline:2px solid var(--accent); outline-offset:2px; border-radius:6px; }
+  .ic { width:14px; height:14px; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; fill:none; flex:none; }
+
+  header { position:sticky; top:0; z-index:50; background:rgba(10,13,19,.86);
+    backdrop-filter:blur(14px); border-bottom:1px solid var(--border); padding:13px 20px; }
+  .hrow { display:flex; flex-wrap:wrap; gap:10px; align-items:center; max-width:1200px; margin:0 auto; }
+  .brand { display:flex; align-items:center; gap:10px; margin-right:auto; }
+  .mark { width:31px; height:31px; border-radius:9px; display:grid; place-items:center;
+    background:linear-gradient(135deg,var(--fire1),var(--fire2)); box-shadow:0 4px 16px rgba(255,92,80,.35); }
+  .mark .ic { width:17px; height:17px; color:#fff; }
+  h1 { font-family:var(--disp); font-size:16.5px; font-weight:700; line-height:1.15; }
+  h1 small { display:block; color:var(--faint); font-family:var(--font); font-weight:400; font-size:10.5px; }
+  .me { display:flex; align-items:center; gap:8px; font-size:13px; color:var(--muted); cursor:pointer;
+    background:var(--card); border:1px solid var(--border); border-radius:10px; padding:7px 12px;
+    transition:border-color .18s; }
+  .me:hover { border-color:var(--border-hi); }
+  .me b { color:var(--text); }
+
+  nav { display:flex; gap:7px; max-width:1200px; margin:12px auto 0; flex-wrap:wrap; }
+  .ntab { display:inline-flex; align-items:center; gap:7px; background:var(--card);
+    border:1px solid var(--border); border-radius:999px; padding:7px 16px; font-size:13.5px;
+    color:var(--muted); cursor:pointer; user-select:none; transition:all .18s; }
+  .ntab:hover { border-color:var(--border-hi); color:var(--text); }
+  .ntab.on { color:var(--text); background:linear-gradient(135deg,rgba(255,138,61,.15),rgba(255,77,109,.15));
+    border-color:rgba(255,120,90,.45); }
+
+  main { max-width:1200px; margin:22px auto; padding:0 20px; }
+  .page { display:none; } .page.on { display:block; }
+
+  .stats { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:18px; }
+  .stat { flex:1; min-width:130px; background:var(--card); border:1px solid var(--border);
+    border-radius:14px; padding:14px 16px; }
+  .stat .v { font-family:var(--disp); font-size:26px; font-weight:700; font-variant-numeric:tabular-nums; }
+  .stat .l { color:var(--faint); font-size:12px; margin-top:2px; }
+  .stat.sh .v { color:var(--orange); } .stat.dn .v { color:var(--green); } .stat.pd .v { color:var(--accent); }
+
+  section { background:var(--card); border:1px solid var(--border); border-radius:16px;
+    padding:16px 18px; margin-bottom:16px; }
+  section h2 { font-size:14px; font-weight:600; display:flex; align-items:center; gap:8px; margin-bottom:12px; }
+  section h2 .ic { color:var(--orange); }
+  section h2 small { color:var(--faint); font-weight:400; font-size:11.5px; margin-left:auto; }
+  .row { display:flex; align-items:center; gap:10px; padding:10px 0; border-top:1px solid var(--border);
+    font-size:13px; flex-wrap:wrap; }
+  .row .hookline { flex:1; min-width:200px; color:var(--text); overflow:hidden; text-overflow:ellipsis;
+    white-space:nowrap; }
+  .row .hookline small { color:var(--faint); display:block; font-size:11px; margin-top:1px; }
+  .row .who2 { color:var(--accent); text-decoration:none; font-weight:600; font-size:12px; white-space:nowrap; }
+  .xb { font-family:var(--disp); font-weight:600; font-size:11px; color:var(--orange);
+    border:1px solid rgba(240,163,63,.4); background:rgba(240,163,63,.07); border-radius:99px;
+    padding:2px 8px; white-space:nowrap; }
+  .pill { display:inline-flex; align-items:center; gap:4px; background:#0c0f16; color:var(--muted);
+    border:1px solid var(--border); border-radius:9px; padding:5.5px 10px; font-size:11.5px;
+    cursor:pointer; text-decoration:none; font-family:var(--font); transition:all .18s; white-space:nowrap; }
+  .pill .ic { width:11px; height:11px; }
+  .pill:hover { color:var(--accent); border-color:rgba(94,161,255,.5); }
+  .pill.ok:hover { color:var(--green); border-color:rgba(63,214,143,.5); }
+  .pill.bad:hover { color:var(--red); border-color:rgba(255,92,92,.5); }
+  .none { color:var(--faint); font-size:13px; padding:14px 0 6px; }
+
+  .act { display:flex; gap:9px; padding:7px 0; border-top:1px solid var(--border);
+    font-size:12.5px; color:var(--muted); }
+  .act time { color:var(--faint); font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .act b { color:var(--text); font-weight:600; }
+  .act .to { color:var(--orange); }
+
+  #radarWrap { height:calc(100vh - 150px); min-height:500px; border:1px solid var(--border);
+    border-radius:16px; overflow:hidden; }
+  #radarWrap iframe { width:100%; height:100%; border:0; }
+
+  .sop { max-width:820px; }
+  .sop h3 { font-size:15px; margin:22px 0 10px; display:flex; gap:8px; align-items:center; }
+  .sop h3 .ic { color:var(--orange); }
+  .sop ol { margin:0 0 8px 22px; color:var(--muted); font-size:13.5px; line-height:1.9; }
+  .sop ol b { color:var(--text); }
+  .sop p { color:var(--muted); font-size:13px; line-height:1.7; margin-bottom:6px; }
+  .sop table { border-collapse:collapse; font-size:13px; margin:8px 0; }
+  .sop td, .sop th { border:1px solid var(--border); padding:7px 14px; color:var(--muted); }
+  .sop th { color:var(--text); background:var(--card-hi); }
+
+  #mission { border:1px solid rgba(255,120,90,.35); border-radius:16px; padding:15px 18px;
+    margin-bottom:14px; background:linear-gradient(135deg,rgba(255,138,61,.10),rgba(255,77,109,.10)); }
+  #mission .mt { font-weight:600; font-size:14px; display:flex; gap:8px; align-items:center; }
+  #mission .mt .ic { color:var(--orange); }
+  #mission .md { color:var(--muted); font-size:12.5px; margin-top:5px; line-height:1.6; }
+  #mission .md b { color:var(--text); font-family:var(--disp); }
+  #overlay { position:fixed; inset:0; background:rgba(6,8,12,.88); backdrop-filter:blur(6px);
+    z-index:200; display:none; place-items:center; }
+  #overlay.show { display:grid; }
+  .obox { background:var(--card); border:1px solid var(--border-hi); border-radius:18px;
+    padding:28px 30px; width:min(92vw,380px); }
+  .obox h2 { font-family:var(--disp); font-size:18px; margin-bottom:6px; }
+  .obox p { color:var(--muted); font-size:13px; margin-bottom:16px; }
+  .obox input, .obox select { width:100%; background:#0c0f16; color:var(--text);
+    border:1px solid var(--border); border-radius:10px; padding:10px 13px; font-size:14px;
+    font-family:var(--font); margin-bottom:11px; }
+  .obox input:focus, .obox select:focus { border-color:var(--accent); outline:none; }
+  .obox button { width:100%; background:linear-gradient(135deg,var(--fire1),var(--fire2));
+    color:#fff; border:0; border-radius:10px; padding:11px; font-size:14px; font-weight:600;
+    font-family:var(--font); cursor:pointer; }
+  .obox button:active { transform:scale(.98); }
+
+  #toast { position:fixed; bottom:26px; left:50%; transform:translateX(-50%) translateY(8px);
+    background:var(--card-hi); border:1px solid var(--border-hi); border-radius:11px;
+    padding:11px 20px; font-size:13px; display:none; z-index:300; opacity:0;
+    box-shadow:0 12px 32px rgba(0,0,0,.5); transition:opacity .2s, transform .2s; }
+  #toast.show { display:block; opacity:1; transform:translateX(-50%) translateY(0); }
+  @media (prefers-reduced-motion: reduce) { * { animation:none!important; transition:none!important; } }
+</style>
+</head>
+<body>
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-flame" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+  <symbol id="i-ext" viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol>
+  <symbol id="i-video" viewBox="0 0 24 24"><path d="m10 8 6 4-6 4Z"/><rect x="2" y="4" width="20" height="16" rx="3"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></symbol>
+  <symbol id="i-radar" viewBox="0 0 24 24"><path d="M19.07 4.93A10 10 0 0 0 6.99 3.34"/><path d="M4 6h.01"/><path d="M2.29 9.62A10 10 0 1 0 21.31 8.35"/><path d="M16.24 7.76A6 6 0 1 0 8.23 16.67"/><path d="M12 18h.01"/><path d="M17.99 11.66A6 6 0 0 1 15.77 16.67"/><circle cx="12" cy="12" r="2"/><path d="m13.41 10.59 5.66-5.66"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+</svg>
+<header>
+  <div class="hrow">
+    <div class="brand">
+      <div class="mark"><svg class="ic"><use href="#i-flame"/></svg></div>
+      <h1>工作台<small id="updated"></small></h1>
+    </div>
+    <div class="me" id="meBtn" title="点击修改身份">
+      <svg class="ic"><use href="#i-user"/></svg><span id="meLabel">未登记</span>
+    </div>
+  </div>
+  <nav>
+    <div class="ntab on" data-p="work"><svg class="ic"><use href="#i-clock"/></svg>今日工作</div>
+    <div class="ntab" data-p="radar"><svg class="ic"><use href="#i-radar"/></svg>爆款雷达</div>
+    <div class="ntab" data-p="sop"><svg class="ic"><use href="#i-book"/></svg>SOP</div>
+  </nav>
+</header>
+<main>
+  <div class="page on" id="p-work">
+    <div id="mission"></div>
+    <div class="stats">
+      <div class="stat pd"><div class="v" id="stPending">–</div><div class="l">未处理(待挑选)</div></div>
+      <div class="stat sh"><div class="v" id="stShoot">–</div><div class="l">拍摄中</div></div>
+      <div class="stat dn"><div class="v" id="stDone">–</div><div class="l">已处理</div></div>
+    </div>
+    <section id="secShoot">
+      <h2><svg class="ic"><use href="#i-video"/></svg>拍摄中队列<small>做完一条,点「完成」</small></h2>
+      <div id="shootList"></div>
+    </section>
+    <section id="secPick">
+      <h2><svg class="ic"><use href="#i-flame"/></svg>本周待挑选爆款 Top 8<small>看中就点「选中拍摄」,细看去爆款雷达</small></h2>
+      <div id="pickList"></div>
+    </section>
+  </div>
+  <div class="page" id="p-radar"><div id="radarWrap"></div></div>
+  <div class="page sop" id="p-sop">
+    <section>
+      <h3><svg class="ic"><use href="#i-flame"/></svg>SOP-01 · Marketer 每周选题流程(周一,约30分钟)</h3>
+      <ol>
+        <li>打开<b>爆款雷达</b>,点快筛「<b>真爆款 ×2+</b>」+「<b>近7天</b>」</li>
+        <li>看「爆款热词」确认本周主题方向(热词越多的主题越优先)</li>
+        <li>挑 <b>3–5 条</b>适合改编的。标准:话题跟我们相关 / Hook 可复制 / 我们拍得出来</li>
+        <li>每条点「<b>Brief</b>」复制 → 发到拍摄群</li>
+        <li>把选中的卡片<b>拖到「拍摄中」</b></li>
+        <li>明显不适合的拖「跳过」,保持未处理越少越好</li>
+      </ol>
+    </section>
+    <section>
+      <h3><svg class="ic"><use href="#i-video"/></svg>SOP-02 · Content Creator 拍摄改编流程(每条 ≤1天)</h3>
+      <ol>
+        <li>打开工作台「<b>今日工作</b>」,看拍摄中队列,从最旧的开始</li>
+        <li>打开原帖看 <b>3 遍</b>:第1遍看整体 / 第2遍拆 Hook(前3秒为什么让人停下) / 第3遍记结构(几个镜头、什么节奏)</li>
+        <li><b>改编不照抄</b>:换成我们的案例、口吻、行业。保留结构,替换内容</li>
+        <li>拍摄 → 剪辑。<b>前3秒必须有钩子</b>,字幕开头即出</li>
+        <li>发布后回到工作台,该条点「<b>完成</b>」</li>
+      </ol>
+    </section>
+    <section>
+      <h3><svg class="ic"><use href="#i-book"/></svg>SOP-03 · 状态定义(团队统一语言)</h3>
+      <table>
+        <tr><th>状态</th><th>意思</th><th>谁负责改</th></tr>
+        <tr><td>未处理</td><td>还没人筛选过</td><td>Marketer 每周清理</td></tr>
+        <tr><td>拍摄中</td><td>已选中,正在改编/拍摄/剪辑</td><td>Marketer 选中时拖入</td></tr>
+        <tr><td>已处理</td><td>已发布或已完成改编</td><td>Creator 完成时点</td></tr>
+        <tr><td>跳过</td><td>不适合我们,不再考虑</td><td>任何人</td></tr>
+      </table>
+    </section>
+    <section>
+      <h3><svg class="ic"><use href="#i-radar"/></svg>SOP-04 · 看到「引流」标签的帖子怎么学</h3>
+      <p>带「引流」标的帖子,重点<b>不是内容,是漏斗</b>。记录三件事:</p>
+      <ol>
+        <li>留言<b>关键词</b>是什么?(例:留言「Start」)</li>
+        <li>送的<b>诱饵</b>是什么?(模板 / 课程 / 清单)</li>
+        <li>之后导去<b>哪里</b>?(DM 自动回复 → 链接 → 报名页)</li>
+      </ol>
+      <p>好的打法直接抄结构,用我们的 GHL / ManyChat 实现。</p>
+    </section>
+    <section>
+      <h3><svg class="ic"><use href="#i-user"/></svg>SOP-05 · 竞对名单管理(发现好账号就加进来)</h3>
+      <ol>
+        <li>打开 Supabase「<b>competitors</b>」表,加一行</li>
+        <li><b>Username</b>:贴账号名或 IG <b>主页</b>链接都行(带 ?igsh= 参数没关系;不要贴帖子链接)</li>
+        <li><b>Tracker</b>:选 IG Competitors 或 AI Competitors</li>
+        <li><b>Active</b>:打勾✅ — <b>没勾不会抓</b></li>
+        <li>每周一自动生效;停止追踪 = 取消勾,不用删行</li>
+      </ol>
+      <p>加账号的标准:跟我们领域相关 / 内容有爆款相 / 值得学。发现雷达里某账号长期没爆款,把它 Active 取消,腾出额度换新的。</p>
+    </section>
+    <section>
+      <h3><svg class="ic"><use href="#i-user"/></svg>SOP-06 · 第一次设置 & 常见问题</h3>
+      <ol>
+        <li><b>登记身份:</b>第一次打开工作台会弹「你是谁」→ 输名字、选角色。这决定你看到的任务卡和排版</li>
+        <li><b>直接改状态:</b>雷达里把卡片拖到上方分类,或用卡片下拉选。看到绿色 ✓ 就成了。<b>不需要输任何密钥</b> —— 这套系统天生只允许改状态,改不了别的数据,所以安全无需登录</li>
+      </ol>
+      <p><b>常见问题:</b></p>
+      <table>
+        <tr><th>现象</th><th>原因</th><th>解决</th></tr>
+        <tr><td>改了状态没反应 / 报错</td><td>网络断了,或页面是旧版</td><td>刷新页面(Ctrl+Shift+R)再试</td></tr>
+        <tr><td>队友改的状态我看不到</td><td>页面最多 10 分钟同步一次</td><td>刷新页面即可;自己的改动是即时的</td></tr>
+        <tr><td>网页打不开 / 数据是空的</td><td>每周自动更新那天可能还在跑</td><td>等 1 小时后再开;还不行找老板看 GitHub Actions</td></tr>
+      </table>
+      <p>状态存在云端(Supabase),换电脑、关机都不会丢,全团队实时共享。</p>
+    </section>
+  </div>
+</main>
+<div id="overlay"><div class="obox">
+  <h2>👋 你是谁?</h2>
+  <p>登记一次,方便团队知道是谁在操作。</p>
+  <input id="oName" placeholder="你的名字" maxlength="20">
+  <select id="oRole">
+    <option value="Marketer">Marketer(选题/投放)</option>
+    <option value="Content Creator">Content Creator(拍摄/剪辑)</option>
+    <option value="Boss">Boss</option>
+  </select>
+  <button id="oSave">进入工作台</button>
+</div></div>
+<div id="toast"></div>
+<script id="data" type="application/json">[{"id": "DfoCtJRCbLM", "tracker": "Traditional Chinese Medicine (TCM) Wellness Center 竞对", "competitor": "sunwaytcmcentre", "caption": "明明吃很少，连喝水都胖？别盲目节食！双威中医李雯雯医师提醒：这可能是“脾虚湿气重”！\n\n脾胃运化变慢，水湿变成“痰湿”堆积在肚子上。\n.\n跟着李医师学会 3 招干货，打通排湿开关：\n1️⃣ 按揉丰隆穴：每天 3 分钟化痰祛湿。\n2️⃣ 健脾四神汤：荤素皆宜，全家老少与儿童都能喝！\n3️⃣ 生姜花椒泡脚：睡前 15 分钟驱寒排湿。\n.\n🛒 四神汤包与中药泡脚包均可在双威中医店面线下购买。\n.\n⚠️ 以上 3 招仅供日常养生参考。症状严重者，建议亲临双威中医诊所线下咨询专业中医师。\n.\n赶快点赞、收藏并分享给朋友！关注我们，带你调好体质！\n\nhttps://youtube.com/shorts/a3nx0aREN-k?feature=share", "transcript": "", "brk": "Hook类型: 痛点直击\n结构: 喝水都胖误区 → 脾虚湿气重根源 → 3招排湿干货与产品引导\n为什么火: 精准切中易胖体质人群焦虑，给出低门槛、可执行的中医调理方案\n改编角度: 结合本地生活痛点，主打“新加坡/马来西亚湿热气候如何高效祛湿”", "my": "明明吃很少，甚至连喝水都感觉在长胖？\n\n很多人遇到这种情况，就盲目开始疯狂节食。\n\n其实盲目节食根本没有用，这很可能是因为你身体脾虚湿气重。\n\n脾胃的运化变慢了，水湿在体内排不出去，就容易变成湿气堆积在肚子上。\n\n今天带你认识三个日常调理的方法。\n\n第一个方法，先做一次 AI 智能把脉。\n\n通过智能检测仪器，清楚了解自己目前的身体状况。\n\n做完会拿到一份价值 RM299 的健康风险评估报告。\n\n先了解自己的体质，才能找到真正适合自己的调理方向。\n\n第二个方法，体验全智能天灸舱调理。\n\n躺进智能艾灸舱，享受三十分钟的温热放松时光。\n\n采用三年陈艾搭配草本配方，带来温热舒适的感受。\n\n特别适合经常手脚冰冷或者容易觉得身体沉重的人。\n\n第三个方法，尝试日常的中药草本泡脚。\n\n在家里也可以进行简单的草本养生护理。\n\n温热的泡脚体验，帮助放松紧绷的身体。\n\n让日常养生慢慢变成生活中的好习惯。\n\n以前身体总觉得不舒服，却不知道问题出在哪里。\n\n只能每天靠着感觉去猜，或者盲目尝试各种方法。\n\n现在有了科学的检测和温和的调理方式。\n\n不用再盲目猜测，而是真正去了解自己的身体。\n\n我们有 Alma 和 Bayan Lepas 两间店，AI 把脉和艾灸都需要预约。\n\n点击 WhatsApp，告诉我们你想预约的时间。\n\n别再猜自己的身体。先了解，再调理。", "tags": "", "bait": false, "type": "Video", "likes": 44, "comments": 0, "er": 6.09, "followers": 722, "date": "2026-11-12", "url": "https://www.instagram.com/p/DfoCtJRCbLM/", "video": true, "ratio": 0, "score": 6.09, "status": "未处理", "x": 1.6}, {"id": "DfD_eBTDx2n", "tracker": "Traditional Chinese Medicine (TCM) Wellness Center 竞对", "competitor": "sunwaytcmcentre", "caption": "𝑻𝒉𝒆 𝑨𝒓𝒕 𝒐𝒇 𝒀𝒂𝒏𝒈 𝑺𝒉𝒆𝒏𝒈 (养生)——— 🙋\n𝑵𝒐𝒖𝒓𝒊𝒔𝒉𝒊𝒏𝒈 𝑸𝒊, 𝑺𝒕𝒓𝒆𝒏𝒈𝒕𝒉𝒆𝒏𝒊𝒏𝒈 𝑱𝒐𝒊𝒏𝒕𝒔 & 𝑬𝒗𝒆𝒓𝒚𝒅𝒂𝒚 𝑺𝒆𝒍𝒇-𝑪𝒂𝒓𝒆\n.\nSunway TCM Centre was delighted to bring an integrative approach to healthy ageing to the Subang Jaya Buddhist Association, with our speakers 𝐌𝐬. 𝐋𝐞𝐞 𝐖𝐞𝐧 𝐖𝐞𝐧, TCM Practitioner, and 𝐌𝐬. 𝐖𝐞𝐧𝐠 𝐌𝐚𝐲 𝐋𝐢𝐧, Registered Dietitian.\n.\nTogether, they explored how Traditional Chinese Medicine (TCM) and Western nutrition can complement each other to support healthy ageing, strengthen mobility, and maintain everyday vitality. 🤝\n.\n🌿 Wen Wen Lee | TCM Practitioner\n\n“From a TCM perspective, healthy ageing begins with nourishing Kidney Qi (肾为先天之本), the foundation of our congenital essence, to support bone and joint health, and strengthening Spleen Qi (脾为后天之本), the foundation of acquired nourishment, to support digestion and overall vitality.”\n.\n🥗 May Lin | Registered Dietitian\n\n“Healthy ageing is not just about preventing disease, but also maintaining the strength and independence to enjoy everyday life.”\n\nMay Lin s", "transcript": "", "brk": "Hook类型: 痛点直击\n结构: 养生讲座回顾 → 中西医结合理念 → 肾脾调理与营养干预\n为什么火: 结合中西医双视角科普抗衰老，戳中华人长寿与关节健康的痛点。\n改编角度: 拍摄中医师与营养师同框短视频，直击“中西医如何结合保养关节”这一话题。", "my": "明明才30出头，身体却像提前进入退休模式了吗？\n\n很多人以为，身体变差只是因为年纪大了或者工作太忙。\n\n其实，真正的原因是没有从根本上了解自己的体质状况。\n\n想要做好日常养护，其实可以尝试这三个方法。\n\n第一步，先做一次AI智能把脉。\n几分钟就能清楚了解目前的身体状况。\n做完还能拿到一份价值RM299的健康风险评估报告。\n\n第二步，体验针对性的智能艾灸。\n躺进智能艾灸舱享受30分钟温热放松。\n3年陈艾结合草本配方带来温暖舒适的感受。\n\n第三步，给生活按个Pause开启Wellness Mode。\n从忙碌模式切换到放松模式。\n给自己安排一场不一样的Wellness Date。\n\n以前总是靠感觉猜自己的身体状况，试过很多方法都抓不到重点。\n\n用对方法了解体质之后，才能真正做好日常养护。\n\n现在就点击WhatsApp告诉我们你想预约的时间。\n\n好好照顾自己，也是一件很重要的事。", "tags": "SunwayTCM, YangSheng, HealthyAgeing, TraditionalChineseMedicine, Nutrition, IntegrativeHealth", "bait": false, "type": "Carousel", "likes": 30, "comments": 0, "er": 4.16, "followers": 722, "date": "2026-10-29", "url": "https://www.instagram.com/p/DfD_eBTDx2n/", "video": false, "ratio": 0, "score": 4.16, "status": "未处理", "x": 1.1}, {"id": "DeqPixNDGvI", "tracker": "Traditional Chinese Medicine (TCM) Wellness Center 竞对", "competitor": "sunwaytcmcentre", "caption": "宝宝难带？积食不长肉？经常感冒？或是注意力难以集中？👶👧👦\n\nIs your child struggling with poor appetite, frequent colds, or concentration issues?\n.\n双威中医非常荣幸迎来了 #郑秀芬博士中医师 的加入！ 郑医师专注小儿全科与发育辅助，致力于通过温和、安全且个性化的中医方案，陪伴孩子健康成长。\n\nSunway TCM Centre is delighted to welcome Dr. Teh Siew Hoon (PhD) to our team! Specializing in General Paediatrics and Developmental Support, Dr. Teh offers safe, gentle, and personalized TCM conditioning tailored to your child’s needs.\n.\n✅ Paediatric Tuina combined with gentle acupuncture, highly accepted by children.\n✅ Relief for indigestion, picky eating, poor growth, and restless sleep.\n✅ Helps improve hyperactivity, inattention, and emotional fluctuations, while supporting speech and motor skills coordination.\n✅ Strengthens natural immunity to support healthy child development.\n.\n📅 门诊时间 / Consultation Schedule: 每周六 (Every Saturday)\n📍 地点 / Location: Sunway TCM Centre (HQ)\n.\nWhatsApp / Call: +6011-5953 7993 / +603-5611 0599\n.\n#SunwayTCMCentre #双威中医 #郑秀芬中医师 #DrTehSiewHoon #小儿推拿 #小儿中医 #小儿全科 #儿童发育", "transcript": "", "brk": "Hook类型: 痛点直击\n结构: 罗列儿童常见健康痛点 → 官宣名医入驻介绍 → 核心疗效与预约方式\n为什么火: 精准捕捉家长焦虑，推出博士名医背书建立信任感\n改编角度: 结合真实调理案例，突出小儿推拿不打针不吃药的直观优势", "my": "明明才三十出头，身体却像提前进入退休模式了吗？\n\n很多人觉得，累了只要睡一觉就能好。\n\n其实没那么简单，身体早就在发出各种小抗议。\n\n不用猜来猜去，第一步先做 AI 智能把脉。\n\n几分钟时间，就能清楚看到自己目前的身体状况。\n\n做完还会拿到一份价值两百九十九令吉的健康风险评估报告。\n\n了解之后，就可以安排适合你的艾灸调理。\n\n躺进智能艾灸舱，享受三十分钟的温热放松时光。\n\n采用三年陈艾搭配草本配方，给身体带来温暖舒适的感受。\n\n新客体验配套只需要二百六十八令吉。\n\n包含一次 AI 把脉，健康风险评估报告，还有两次全智能天灸舱调理。\n\n原价五百九十九令吉，现在就能轻松体验。\n\n以前总是靠感觉猜体质，不知道该怎么调理。\n\n现在有了 AI 智能检测，先了解，再调理，身体轻松很多。\n\n点击私信我们，告诉你想预约的时间。\n\n好好照顾自己，也是一件很重要的事。", "tags": "郑秀芬博士中医师, SunwayTCMCentre, 双威中医, 郑秀芬中医师, DrTehSiewHoon, 小儿推拿, 小儿中医, 小儿全科, 儿童发育辅助, ADHD中医调理, 自闭症中医辅助, 体质调理, PediatricTCM", "bait": false, "type": "Image", "likes": 25, "comments": 1, "er": 3.6, "followers": 722, "date": "2026-10-19", "url": "https://www.instagram.com/p/DeqPixNDGvI/", "video": false, "ratio": 0, "score": 3.88, "status": "未处理", "x": 1.0}, {"id": "DeGMZPJj3-u", "tracker": "Traditional Chinese Medicine (TCM) Wellness Center 竞对", "competitor": "sunwaytcmcentre", "caption": "Feeling Out of Balance? Restore Your Systemic Harmony | \n⚖️ 身体失衡？重塑健康律动\n.\nAre allergic reactions, muscle aches, or bloating constantly disrupting your daily life?\n\nAt Sunway TCM Centre, Ms. Lee Wen Wen (#李雯雯中医师) specializes in combining acupuncture and herbal medicine to address sub-health conditions and pain management. \n\nThrough Dr. Tan's Balance Acupuncture and holistic body constitution restructuring, we aim to address the root cause of your discomforts.\n.\n📲 Book Your Appointment Today:\nWhatsApp: +6011-5953 7993\nCall: +603-5611 0599", "transcript": "", "brk": "Hook类型: 痛点直击\n结构: 罗列日常不适症状 → 介绍医师与特色疗法 → 呼吁预约导流\n为什么火: 精准切中现代人亚健康痛点，展示了专业权威的中医解决方案\n改编角度: 针对华人最关注的湿气或失眠痛点，用对比图直观呈现调理前后的改善效果", "my": "经常胃胀气？肚子总是胀胀的？\n明明没有什么大事，身体却总是感觉沉沉的、提不起精神？\n很多人遇到这些小困扰，第一反应以为只是吃坏肚子，或者随便买个药吃就算了。\n其实，这可能是身体在发出失衡的信号，不是单靠休息就能解决的。\n身体出状况的时候，很多人以为只能吃药或者靠时间硬扛。\n其实，从传统中医的养生理念来看，先了解体质，再进行针对性调理，才是更温和的方式。\n今天带你了解三个日常养护身体的方法，帮你找回轻松的感觉。\n第一个方法，做一次 AI 智能把脉。\n不需要猜测自己的身体状况，花几分钟时间，就能清楚看到目前的各项身体机能指标。\n检测完成后，还能拿到一份健康风险评估报告。\n第二个方法，体验全智能天灸舱调理。\n躺进智能艾灸舱里，感受 3 年陈艾与草本配方带来的温热护理。\n每次 30 分钟，可能帮助舒缓肩颈紧绷或手脚冰冷的困扰，带来温暖舒适的感受。\n第三个方法，尝试日常草本温养。\n比如使用艾脐贴或者进行中药泡脚，从日常细节开始，慢慢调理脾胃和身体状态。\n以前身体不舒服，只能靠猜，不知道该怎么调理。\n现在有了智能检测和传统艾灸结合的方式，先了解体质，再针对性调理，让养生更简单。\n我们有首次体验配套，原价 RM599，现在试用价只需 RM268。\n包含 1 次 AI 把脉、健康风险评估报告，以及 2 次全智能天灸舱调理。\n每个人的体质不一样，先来体验，再决定适不适合你。\n点下方链接，发消息告诉我们你想预约的时间。", "tags": "李雯雯中医师", "bait": false, "type": "Image", "likes": 22, "comments": 0, "er": 3.05, "followers": 722, "date": "2026-10-05", "url": "https://www.instagram.com/p/DeGMZPJj3-u/", "video": false, "ratio": 0, "score": 3.05, "status": "未处理", "x": 0.8}, {"id": "DetJU9vAT8-", "tracker": "Traditional Chinese Medicine (TCM) Wellness Center 竞对", "competitor": "sunwaytcmcentre", "caption": "Nurturing the future of integrative healthcare! 🎓🌿\n\nOn October 19, 2026, Sunway TCM Centre had the pleasure of hosting Year 2 Pharmacy students from the Faculty of Pharmacy, Universiti Kebangsaan Malaysia (UKM) for an insightful educational visit as part of their Traditional and Complementary Medicine (T&CM) course.\n\nDuring the visit, students explored:\n📚 General landscape of T&CM in Malaysia\n🏥 Clinical practices and services offered at Sunway TCM Centre\n🤝 The complementary role of T&CM within modern healthcare\n💊 Interprofessional roles of Pharmacists and Herbalists in T&CM\n🚶‍♂️ A guided walkabout and facility tour of our clinical environment\n\nThank you to the future pharmacists from UKM for your enthusiasm and passion for integrative medicine! We are proud to support academic learning and foster collaboration between conventional pharmacy and traditional healthcare. 💚\n\n#SunwayTCM #UKM #FacultyOfPharmacy #TCMInMalaysia #IntegrativeMedicine #EducationalVisit #FuturePharmacists #Clinical", "transcript": "", "brk": "Hook类型: 权威背书\n结构: 行业参访 → 揭秘现代中医 → 学术合作\n为什么火: 展现专业实力与机构权威性增强信任感\n改编角度: 联合本地名校或专家探店，展示中医中心现代化医疗环境以建立专业信任。", "my": "明明才30出头\n身体却像提前进入退休模式\n🥲\n下班只想躺平\n什么都不想做\n😮‍💨\n\n很多人以为\n调理身体一定要吃苦药\n或者花大钱买一堆保健品\n❌\n\n其实不是这样的\n与其盲目地靠感觉猜\n不如先真正了解自己的身体\n🌿\n\n来 JIUMOXA 灸大夫\n带你看看现代人怎么做养生\n✨\n\n① 先做 AI 智能把脉\n⌚\n几分钟的时间\n清楚看到自己目前的身体状况\n做完还会拿到一份价值 RM299 的健康风险评估报告\n📄\n不用盲目猜\n先了解体质再说话\n\n② 躺进智能艾灸舱\n🔥\n3 年陈艾结合草本配方\n享受 30 分钟的温热放松时光\n感受艾草带来的暖意\n可能帮助舒缓肩颈紧绷与手脚冰冷\n让身体感觉更轻松\n\n③ 选择适合的调理配套\n💚\n首次体验配套只要 RM268\n包含 1 次 AI 把脉\n还有 2 次全智能天灸舱调理\n原价 RM599 的配套\n现在带你体验科学与传统的结合\n\n以前总是靠感觉猜体质\n结果常常越调越累\n🥲\n现在先做 AI 把脉了解情况\n再针对性地安排艾灸调理\n让养生变得更清楚明白\n\n📍\n我们在 Alma Bukit Mertajam 和 Bayan Lepas 都有门店\nAI 把脉和艾灸都需要提前预约\n💌\n点击 WhatsApp 告诉我们你想预约的时间\n了解身体状况\n好好照顾自己\n也是一件很重要的事 🤍", "tags": "SunwayTCM, UKM, FacultyOfPharmacy, TCMInMalaysia, IntegrativeMedicine, EducationalVisit, FuturePharmacists, ClinicalTour", "bait": false, "type": "Carousel", "likes": 21, "comments": 0, "er": 2.91, "followers": 722, "date": "2026-10-20", "url": "https://www.instagram.com/p/DetJU9vAT8-/", "video": false, "ratio": 0, "score": 2.91, "status": "未处理", "x": 0.8}, {"id": "Dd6SNYzhMKZ", "tracker": "Traditional Chinese Medicine (TCM) Wellness Center 竞对", "competitor": "virtuetcm.my", "caption": "Mont Kiara can be busy, so we wanted to create a little space where you can slow down. 🌿\n\nCome in, have some tea, listen to a little music, breathe in the gentle scent of herbs, and take a moment for yourself.\n\nWhether you’re here for a treatment or simply need some time to pause, we’re here to care for you.\n\nA little calm, right here in Mont Kiara. 🤍\n\n📍 Virtue TCM @ Mont Kiara, Arcoris\n✨  Open daily 10am–6pm, closed on Wednesdays\n📲 Book your appointment via WhatsApp or online booking.", "transcript": "Music Music Music Music Music Music Music Music", "brk": "Hook类型: 身份共鸣\n结构: 环境氛围展示 → 核心服务体验 → 预约导流转化\n为什么火: 精准捕捉都市白领渴望逃离快节奏的心理，治愈感氛围拉满\n改编角度: 结合中医馆特色，用“都市绿洲”概念拍摄沉浸式解压短片吸引忙碌上班族", "my": "明明才30出头身体却像提前进入退休模式\n\n很多人以为下班回家躺平就能恢复精力\n其实身体的疲惫根本没有真正卸下来\n\n其实问题不是不够休息\n而是身体气血运行慢了\n湿气和紧绷一直卡在里面\n\n第一步先做AI智能把脉\n几分钟就能清楚了解自己目前的身体状况\n还包含价值RM299的健康风险评估报告\n让你不再靠感觉猜身体哪里累\n\n第二步是享受20分钟草本泡脚\n用12味草本温暖双脚\n先把紧绷感卸下来\n带来温暖舒适的感受\n\n第三步是躺进智能艾灸舱\n3年陈艾结合草本配方\n进行30分钟的全身艾灸调理\n感受温热放松时光\n\n以前总觉得身体沉重提不起精神\n试过各种方法还是觉得累\n现在懂得先了解体质再针对性调理\n整个人轻松很多\n\n点击WhatsApp\n了解并预约首次体验配套RM268\n包含1次AI把脉和2次天灸舱调理\n\n养生不必等到身体不舒服才开始", "tags": "", "bait": false, "type": "Video", "likes": 129, "comments": 2, "er": 1.59, "followers": 8239, "date": "2026-09-30", "url": "https://www.instagram.com/p/Dd6SNYzhMKZ/", "video": true, "ratio": 0, "score": 1.64, "status": "未处理", "x": 9.1}, {"id": "DeCQVlugjqb", "tracker": "Traditional Chinese Medicine (TCM) Wellness Center 竞对", "competitor": "sante_beauty_tcm", "caption": "女人的情绪、睡眠、体重、疲劳感，甚至身体状态，都可能和荷尔蒙变化息息相关。\n这个 Pink October，我们不只关注乳房健康，也一起多了解自己的身体，了解自己的身体，\n不是等到身体出现问题才开始。从认识自己的荷尔蒙开始，\n照顾情绪、睡眠、能量与女性健康\n#健康馆#pinkoctober #乳癌日 #能量療癒", "transcript": "", "brk": "Hook类型: 痛点直击\n结构: 列举女性常见症状 → 引入荷尔蒙关联 → 呼吁粉红十月预防\n为什么火: 精准切中现代女性情绪、睡眠、体重等亚健康痛点，借势粉红十月传递关怀。\n改编角度: 结合中医气血与肝郁调理，拍“四大症状自查”引出TCM内调方案。", "my": "🤔 你真的了解自己的身体吗？\n\n容易累、睡不好、手脚冰冷，\n身体总是沉沉的，\n很多时候，我们都只是靠感觉猜。\n\n以为多休息几天就会好，\n以为吃点保健品就能解决，\n其实身体的每一个信号，\n都在提醒你先去了解它。\n\n不用靠猜，\n带你用科学的方式看懂身体。\n先做 1 次 AI 智能把脉，\n花几分钟时间，\n清楚看到自己目前的身体状况。\n做完还会拿到一份健康风险评估报告，\n价值 RM299。\n\n了解之后，\n再安排适合你的艾灸调理。\n躺进智能艾灸舱，\n享受 30 分钟温热放松，\n感受 3 年陈艾与草本配方带来的暖意。\n\n以前身体不舒服，\n总是不知道问题出在哪里，\n只能自己盲目忍耐。\n现在先做 AI 智能把脉，\n了解体质后再进行针对性艾灸调理，\n让身体慢慢恢复温暖与平衡。\n\n首次体验配套只要 RM268，\n包含 1 次 AI 把脉、\n健康风险评估报告，\n以及 2 次全智能天灸舱调理，\n原价可是 RM599。\n\n每个人的体质不一样，\n先来体验，\n再决定适不适合你。\n\n📍 我们的门店在 Alma Bukit Mertajam 和 Bayan Lepas，\nAI 把脉和艾灸都需要提前预约。\n\n💌 点击 WhatsApp，告诉我们你想预约的时间，\n我来帮你安排。", "tags": "健康馆, pinkoctober, 乳癌日, 能量療癒", "bait": false, "type": "Image", "likes": 13, "comments": 0, "er": 0.28, "followers": 4685, "date": "2026-10-03", "url": "https://www.instagram.com/p/DeCQVlugjqb/", "video": false, "ratio": 0, "score": 0.28, "status": "未处理", "x": 1.6}, {"id": "DeHKL5yDGM_", "tracker": "Traditional Chinese Medicine (TCM) Wellness Center 竞对", "competitor": "virtuetcm.my", "caption": "💗 A Gentle Reminder to Care for You.\n\nOctober is Breast Cancer Awareness Month — a meaningful time to pause, reconnect with your body, and become more aware of your own wellbeing.\n\nJoin us for our Breast Health & Gua Sha Massage Workshop (乳房保健与刮痧工作坊), a small-group, hands-on session guided by our experienced TCM Practitioner. 🌿\n\nYou’ll learn how to:\n\n✨ Practise gentle breast self-awareness techniques\n🌿 Understand breast health from a TCM perspective\n🪨 Learn simple Gua Sha techniques for self-care and relaxation\n💗 Build a mindful self-care practice you can continue at home\n\nYour workshop includes:\n🪨 Gua Sha stone\n🌿 Body oil\n👩🏻‍⚕️ Guided session by TCM Practitioner\n\n📅 Date: 25 Oct 2026\n⏰ Time: 10:00-11:30am\n📍 Venue: Virtue TCM @ Bangsar\n💬 English Class (中文翻译)\n🎟 RM228 Early Bird (till 20 Oct)\n\nCome as you are. Learn, reconnect, and take a little more time to care for yourself. 💗\n\nReserve your spot: https://forms.gle/LVGszUTByr74BBps6\n\nFor wellness education and self-care purposes only. Pl", "transcript": "", "brk": "Hook类型: 身份共鸣\n结构: 节日关怀提醒 → 推出工作坊 → 详细教学与礼品 → 报名Call to Action\n为什么火: 借势粉红十月乳腺癌关怀月，精准触达女性对自身健康的焦虑与关爱需求。\n改编角度: 拍摄女性日常摸胸自查痛点，结合中医刮痧疏通乳腺结节的实操画面做成短视频。", "my": "明明才30出头\n身体却像提前进入退休模式了吗\n下班只想躺平\n什么都不想做\n你可能以为\n只要多喝热水就能调理好\n其实经常手脚冰冷和体虚乏力\n往往是因为身体内部缺少了温热的力量\n不用再靠感觉猜自己的身体状况了\n先了解\n再调理\n这里有三个日常养生的小方法\n第一\n你可以先做一次 AI 智能把脉\n几分钟时间\n就能清楚看到自己目前的身体状况\n做完还会获得一份健康风险评估报告\n第二\n你可以尝试中药泡脚\n利用草本配方温热双脚\n带来温暖舒适的感受\n特别适合喜欢温热养生体验的人\n第三\n你可以躺进智能艾灸舱\n进行针对性的全身艾灸调理\n3年陈艾结合草本配方\n享受30分钟的温热放松时光\n暂时放下工作压力\n以前很多人身体不舒服时\n都不知道该从哪里开始调理\n只能盲目买各种保健品\n现在你可以直接到灸大夫艾灸养身馆\n选择首次体验配套\n只需要 RM268\n就能包含 1 次 AI 把脉\n健康风险评估报告\n以及 2 次全智能天灸舱调理\n好好照顾自己\n也是一件很重要的事\n点击 WhatsApp\n告诉我们你想预约的时间", "tags": "", "bait": false, "type": "Carousel", "likes": 15, "comments": 0, "er": 0.18, "followers": 8239, "date": "2026-10-05", "url": "https://www.instagram.com/p/DeHKL5yDGM_/", "video": false, "ratio": 0, "score": 0.18, "status": "未处理", "x": 1.0}, {"id": "DeZbnXGA71A", "tracker": "Traditional Chinese Medicine (TCM) Wellness Center 竞对", "competitor": "sante_beauty_tcm", "caption": "🇲🇾槟城 |上班族真的要试试这种放松活动\n前阵子真的觉得自己状态越来越差，情绪有点烦躁 ；肩颈也一直很酸 。刚好跟朋友聊天的时候提到想去做个 Massage 放松一下～\n结果朋友就直接推荐我来这家【Sante Beauty &TCM】，还叫我赶快去试试看所以立马冲来一探究竟！\n一进门我就先被环境吸引到。。。整个空间是那种很舒服的新中式风格，拍照也很好看～而且这里的小姐姐服务都蛮温柔的，重点是不会一直 Hard Sell，这点真的很加分！\n开始护理前有先做一个AI测试，再根据我的情况做适合的护\n这次我主要做的是胸部淋巴疏通＋肩颈这一类的护（ 整个过程大概一个小时左右，肩颈、手臂、奶部周围都会带到，整体按下来真的蛮放松的。\n\n很惊喜的是做完居然还有下午茶\n我这个大馋丫头看到甜品直接开心！！！护理完毕还能坐下来慢慢吃点东西，整个体验感真的蛮舒服～今天就先分享到这里啦。有兴趣的话可以自己去了解看看~\n\n📍Sante Beauty TCM \n☎️ 013-5437249\n\n#槟城 #槟城人 #放松好去处 ＃槟城周末 ＃槟城好去处＃槟城按摩 ＃槟城养生馆 ＃按摩放松解压 ＃身心放松好去处 ＃放松解压方式", "transcript": "我還在等我看最近發現自己的肩頸非常痠痛情緒也非常不穩定就來這一家新中市陽盛館做馬殺這滿滿的獎狀看起來很專業一開始會先幫你做個等段檢測出來的話我是滿適合做胸部護理的之後把我帶到了房間穿上衣服就開始拉整個過程大概持續一個小時不管是肩頸還是手臂或者是胸部都會按刀之後還會做刮殺做完之後感覺身體都沒有那麼堵了到了我最期待的環節就是吃這個小茶點這個泡芙很好吃還有中式糖水除了馬殺之外這裡包含的護理也滿多的你有空可以過來看看就是這一家啦記得 for the morning我們下個影片見", "brk": "Hook类型: 痛点直击\n结构: 痛点引发 → 探店体验 → 特色项目 → 惊喜结尾\n为什么火: 精准切中大马上班族肩颈酸痛与释放压力的刚需\n改编角度: 放大AI检测与中式下午茶的差异化体验，吸引注重生活品质的上班族", "my": "明明才30出头，身体却像提前进入退休模式了吗\n\n很多人以为，累了只要随便去按摩按两下就能好\n\n其实身体酸痛和精神沉重，往往是因为湿气重或者气血不通\n\n与其盲目去按摩，不如先了解自己的身体状况再来调理\n\n来 JIUMOXA 灸大夫，第一步先做 1 次 AI 智能把脉\n\n几分钟时间，就能清楚看到自己目前的身体状况\n\n做完还会拿到一份价值 RM299 的健康风险评估报告\n\n了解体质之后，就可以开始进行针对性的调理\n\n躺进智能艾灸舱，享受 30 分钟的温热放松时光\n\n3年陈艾结合草本配方，给身体带来温暖舒适的感受\n\n特别适合经常手脚冰冷或者久坐肩颈紧绷的人\n\n还有 20 分钟的 12 味草本养生泡脚可以体验\n\n从传统中医的温阳祛湿理念出发，好好放松一下\n\n以前身体紧绷的时候，总是不知道该怎么办\n\n现在有了 AI 把脉和智能艾灸，可以先了解再调理\n\n给自己安排一场不一样的养生体验，让身体慢慢恢复平衡\n\n点击 WhatsApp，告诉我们你想预约的时间", "tags": "槟城, 槟城人, 放松好去处", "bait": false, "type": "Video", "likes": 8, "comments": 0, "er": 0.17, "followers": 4685, "date": "2026-10-12", "url": "https://www.instagram.com/p/DeZbnXGA71A/", "video": true, "ratio": 0, "score": 0.17, "status": "未处理", "x": 1.0}, {"id": "DeTMxdeh1-J", "tracker": "Traditional Chinese Medicine (TCM) Wellness Center 竞对", "competitor": "virtuetcm.my", "caption": "💗 Care for your breast health, the TCM way.\n\nDiscover gentle Gua Sha techniques, explore traditional Qi and Blood flow concepts, and learn more about breast self-care and awareness.\n\n🌿 Breast Health & Gua Sha Massage Workshop \n📅 25 October \n📍 Kuala Lumpur & George Town \n🎟️ Registration link in bio \n✨ Early Bird ends 20 October!\n\nLimited spots available. DM us to reserve yours.", "transcript": "...", "brk": "Hook类型: 痛点直击+健康焦虑\n结构: 提出乳腺保养痛点 → 演示中医刮痧手法 → 引导报名线下工作坊\n为什么火: 切中女性乳腺健康盲区，用直观的中医疏通手法建立专业信任与好奇。\n改编角度: 结合现代女性熬夜结节痛点，展示3分钟居家乳腺经络疏通，引流到店体验。", "my": "明明才30出头，身体却像提前进入退休模式了吗？\n\n很多人以为，累了只要回家躺平就能恢复。\n\n其实不是，身体总是沉沉的，往往是因为湿气积压和气血运行不顺畅。\n\n今天分享3个温和调理身体的方法。\n\n第一步，先了解目前的身体状况。\n通过AI智能把脉仪，花几分钟检测身体各项机能指标，清楚看到自己的健康状况，还会拿到一份价值RM299的健康风险评估报告。\n不用再靠感觉猜测。\n\n第二步，进行针对性的艾灸调理。\n躺进智能艾灸舱，享受30分钟温热放松，3年陈艾结合草本配方，给身体带来温热养护，特别适合长期待在冷气房和手脚冰凉的人。\n\n第三步，日常居家做点简单的草本护理。\n把艾脐贴贴在肚脐或脚底，19种草本原料温和呵护脾胃，不用吞也不用熬，轻松融入日常生活中。\n\n以前总是靠猜来照顾身体，结果还是经常累、睡不好。\n现在用AI把脉先了解体质，再安排合适的艾灸调理，整个人感觉轻松很多。\n\n想先了解自己的身体状况吗？\n点击WhatsApp，告诉我们你想预约的时间。\n\n养生不必等到身体不舒服才开始。", "tags": "", "bait": false, "type": "Video", "likes": 10, "comments": 0, "er": 0.12, "followers": 8239, "date": "2026-10-10", "url": "https://www.instagram.com/p/DeTMxdeh1-J/", "video": true, "ratio": 0, "score": 0.12, "status": "未处理", "x": 0.7}, {"id": "De9asksgcqe", "tracker": "Traditional Chinese Medicine (TCM) Wellness Center 竞对", "competitor": "sante_beauty_tcm", "caption": "「氣結則血瘀」\n在中医观念里，乳房是肝经、胃经行经之处。\n长期受生闷气、压抑情绪，会导致「肝气郁结」。\n气机一旦堵塞，血液循环就会变差，久而久之容易在胸部形成「瘀」和「结」（例如结节或增生）。\n小结：这是在提醒您，\n身心的能量管道「堵住」了，该疏通了！\n#请好好爱自己", "transcript": "", "brk": "Hook类型: 痛点直击\n结构: 情绪原因 → 生理机制 → 结语提醒\n为什么火: 准确戳中现代女性生闷气导致乳腺结节的健康焦虑。\n改编角度: 结合中医推拿或艾灸手法，展示如何现场疏通经络化解气结。", "my": "明明才30出头，身体为什么总像提前进入退休模式？\n\n下班只想躺平，身体沉重得提不起精神，很多人以为只是工作太累。\n\n其实不是因为你老了，而是身体的能量管道堵住了。\n\n身体开始发出信号，用三个方法带你认识调养。\n\n第一步，先了解自己的身体状况。\n\n别再靠感觉猜了，做一次AI智能把脉，几分钟就能清楚看到目前的身体状况，还附带一份健康风险评估报告。\n\n第二步，给身体安排温热放松时光。\n\n躺进智能艾灸舱，30分钟的温热调理，感受3年陈艾与草本配方带来的暖意，舒缓日常的紧绷与不适。\n\n第三步，从日常细节开始护理。\n\n尝试温和的草本泡脚或是贴在肚脐的艾脐贴，把传统中医的养生理念融入生活。\n\n以前身体不舒服时，总是不知道问题出在哪里，只能盲目地猜。\n\n现在有了科学的检测和温和的调理，先了解体质，再针对性调理，找回身体的平衡与轻松。\n\n养生不必等到身体不舒服才开始。\n\n点击WhatsApp，告诉我们你想预约的时间，来体验我们的首次体验配套。\n\n好好照顾自己，也是一件很重要的事。", "tags": "请好好爱自己", "bait": false, "type": "Image", "likes": 5, "comments": 0, "er": 0.11, "followers": 4685, "date": "2026-10-26", "url": "https://www.instagram.com/p/De9asksgcqe/", "video": false, "ratio": 0, "score": 0.11, "status": "未处理", "x": 0.6}]</script>
+<script>
+const DATA = JSON.parse(document.getElementById('data').textContent);
+const SUPA = 'https://yindrshypvwvruxvkkfp.supabase.co';
+const ANON = 'sb_publishable_CiUtpg2DHhUZnxL_5JSRmw_UIunJtrN';
+document.getElementById('updated').textContent = '数据更新于 2026-11-13 11:39 (GMT+8)';
+
+const $ = id => document.getElementById(id);
+const I = n => '<svg class="ic"><use href="#i-' + n + '"/></svg>';
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt = n => n >= 1e6 ? (n/1e6).toFixed(1)+'M' : n >= 1e3 ? (n/1e3).toFixed(1)+'K' : String(n);
+const getKey = () => ANON;  // anon key is baked in — safe, can only change status
+const firstLine = c => ((c || '').split('\n').map(l => l.trim()).filter(Boolean)[0] || '(无文案)');
+const byRec = {}; DATA.forEach(d => byRec[d.id] = d);
+
+function toast(msg, ok) {
+  const t = $('toast'); t.textContent = msg; t.classList.add('show');
+  t.style.borderColor = ok ? 'var(--green)' : 'var(--red)';
+  clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+// ---- mission card ----
+function renderMission() {
+  const role = localStorage.getItem('tm_role') || '';
+  const name = localStorage.getItem('tm_name') || '';
+  const pend = DATA.filter(d => d.status === '未处理').length;
+  const hot = DATA.filter(d => d.status === '未处理' && (d.x || 0) >= 2).length;
+  const queue = DATA.filter(d => d.status === '拍摄中').length;
+  const done = DATA.filter(d => d.status === '已处理').length;
+  const m = $('mission');
+  if (role === 'Marketer') {
+    m.innerHTML = '<div class="mt">' + I('flame') + esc(name) + ',任务:从待挑选里选出值得拍的</div>'
+      + '<div class="md">待挑选 <b>' + pend + '</b> 条(其中真爆款 ×2+ 有 <b>' + hot + '</b> 条)'
+      + ' · 从下面清单直接选,或去雷达细看</div>';
+  } else if (role === 'Content Creator') {
+    m.innerHTML = '<div class="mt">' + I('video') + esc(name) + ',任务:清空拍摄中队列</div>'
+      + '<div class="md">队列还有 <b>' + queue + '</b> 条待做 · 已完成共 <b>' + done + '</b> 条</div>';
+  } else {
+    m.innerHTML = '<div class="mt">' + I('flame') + '团队概览</div>'
+      + '<div class="md">待挑选 <b>' + pend + '</b> 条 · 拍摄中 <b>' + queue + '</b> 条 · 已完成 <b>' + done + '</b> 条</div>';
+  }
+}
+
+function orderSections() {
+  // Marketer sees picks first; Creator sees shooting queue first
+  if ((localStorage.getItem('tm_role') || '') === 'Marketer') {
+    $('secShoot').parentNode.insertBefore($('secPick'), $('secShoot'));
+  } else {
+    $('secPick').parentNode.insertBefore($('secShoot'), $('secPick'));
+  }
+}
+
+// ---- identity ----
+function meLabel() {
+  const n = localStorage.getItem('tm_name'), r = localStorage.getItem('tm_role');
+  $('meLabel').innerHTML = n ? '<b>' + esc(n) + '</b>&nbsp;· ' + esc(r || '') : '未登记';
+}
+function showOverlay() {
+  $('oName').value = localStorage.getItem('tm_name') || '';
+  $('oRole').value = localStorage.getItem('tm_role') || 'Marketer';
+  $('overlay').classList.add('show');
+}
+$('oSave').onclick = () => {
+  const n = $('oName').value.trim();
+  if (!n) { $('oName').focus(); return; }
+  localStorage.setItem('tm_name', n);
+  localStorage.setItem('tm_role', $('oRole').value);
+  $('overlay').classList.remove('show');
+  meLabel(); orderSections(); renderMission();
+  refreshStatuses();
+};
+$('meBtn').onclick = showOverlay;
+meLabel();
+if (!localStorage.getItem('tm_name')) showOverlay();
+
+// ---- tabs ----
+document.querySelectorAll('.ntab').forEach(t => t.onclick = () => {
+  document.querySelectorAll('.ntab').forEach(x => x.classList.toggle('on', x === t));
+  document.querySelectorAll('.page').forEach(p => p.classList.toggle('on', p.id === 'p-' + t.dataset.p));
+  if (t.dataset.p === 'radar' && !$('radarWrap').querySelector('iframe')) {
+    const f = document.createElement('iframe'); f.src = 'index.html'; $('radarWrap').appendChild(f);
+  }
+});
+
+// ---- status write ----
+async function setStatus(d, val) {
+  try {
+    const r = await fetch(SUPA + '/rest/v1/posts?post_id=eq.' + encodeURIComponent(d.id), {
+      method: 'PATCH',
+      headers: { 'apikey': ANON, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+      body: JSON.stringify({ status: val })
+    });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    d.status = val;
+    cacheStatus(d.id, val);
+    toast('✓ @' + d.competitor + ' → ' + val, true);
+  } catch (e) {
+    toast('失败: ' + e.message, false);
+  }
+  renderWork();
+}
+
+// ---- 今日工作 ----
+function pillBtn(cls, icon, label) {
+  return '<button class="pill ' + cls + '">' + I(icon) + label + '</button>';
+}
+
+function renderWork() {
+  const pend = DATA.filter(d => d.status === '未处理');
+  const shoot = DATA.filter(d => d.status === '拍摄中');
+  const done = DATA.filter(d => d.status === '已处理');
+  $('stPending').textContent = pend.length;
+  $('stShoot').textContent = shoot.length;
+  $('stDone').textContent = done.length;
+
+  // shooting queue
+  const sl = $('shootList'); sl.innerHTML = '';
+  if (!shoot.length) sl.innerHTML = '<div class="none">队列是空的 — Marketer 去爆款雷达挑几条拖进「拍摄中」</div>';
+  shoot.forEach(d => {
+    const r = document.createElement('div'); r.className = 'row';
+    r.innerHTML = '<a class="who2" href="https://www.instagram.com/' + d.competitor + '/" target="_blank">@' + esc(d.competitor) + '</a>'
+      + ((d.x || 0) >= 2 ? '<span class="xb">×' + d.x + '</span>' : '')
+      + '<span class="hookline">' + esc(firstLine(d.caption)) + '</span>'
+      + '<a class="pill" href="' + d.url + '" target="_blank">' + I('ext') + '原帖</a>'
+      + pillBtn('ok', 'check', '完成') + pillBtn('bad', 'x', '退回');
+    const btns = r.querySelectorAll('button');
+    btns[0].onclick = () => setStatus(d, '已处理');
+    btns[1].onclick = () => setStatus(d, '未处理');
+    sl.appendChild(r);
+  });
+
+  // picks
+  const picks = pend.filter(d => (d.x || 0) >= 2).sort((a, b) => (b.x || 0) - (a.x || 0)).slice(0, 8);
+  const pl = $('pickList'); pl.innerHTML = '';
+  if (!picks.length) pl.innerHTML = '<div class="none">暂时没有 ×2 以上的未处理爆款 — 等周一自动抓新数据</div>';
+  picks.forEach(d => {
+    const r = document.createElement('div'); r.className = 'row';
+    r.innerHTML = '<span class="xb">×' + d.x + '</span>'
+      + '<a class="who2" href="https://www.instagram.com/' + d.competitor + '/" target="_blank">@' + esc(d.competitor) + '</a>'
+      + '<span class="hookline">' + esc(firstLine(d.caption))
+      + '<small>🔥' + d.score + ' · ER ' + d.er + '% · 💬' + fmt(d.comments) + '</small></span>'
+      + '<a class="pill" href="' + d.url + '" target="_blank">' + I('ext') + '原帖</a>'
+      + pillBtn('ok', 'video', '选中拍摄') + pillBtn('bad', 'x', '跳过');
+    const btns = r.querySelectorAll('button');
+    btns[0].onclick = () => setStatus(d, '拍摄中');
+    btns[1].onclick = () => setStatus(d, '跳过');
+    pl.appendChild(r);
+  });
+  renderMission();
+}
+
+function applyStatusCache() {
+  try {
+    const c = JSON.parse(localStorage.getItem('st_cache') || '{}');
+    Object.keys(c).forEach(rid => { const d = byRec[rid]; if (d) d.status = c[rid]; });
+  } catch (e) {}
+}
+
+function cacheStatus(rid, val) {
+  try {
+    const c = JSON.parse(localStorage.getItem('st_cache') || '{}');
+    c[rid] = val; localStorage.setItem('st_cache', JSON.stringify(c));
+  } catch (e) {}
+}
+
+// ---- live statuses from Supabase ----
+async function refreshStatuses() {
+  applyStatusCache(); renderWork();  // last-known statuses first
+  if (Date.now() - (+localStorage.getItem('st_ts') || 0) < 600000) return;  // 10-min throttle
+  localStorage.setItem('st_ts', String(Date.now()));
+  const fresh = {};
+  try {
+    const r = await fetch(SUPA + '/rest/v1/posts?select=post_id,status', { headers: { 'apikey': ANON } });
+    if (!r.ok) return;
+    (await r.json()).forEach(row => {
+      const d = byRec[row.post_id];
+      if (d) d.status = row.status || '未处理';
+      if (row.status && row.status !== '未处理') fresh[row.post_id] = row.status;
+    });
+    localStorage.setItem('st_cache', JSON.stringify(fresh));
+    renderWork();
+  } catch (e) {}
+}
+
+orderSections();
+renderMission();
+renderWork();
+refreshStatuses();
+</script>
+</body>
+</html>
